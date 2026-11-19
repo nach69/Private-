@@ -2,7 +2,7 @@
   "name": "grupo-sobremesa-web",
   "private": true,
   "type": "module",
-  "description": "Web de Grupo Sobremesa: estática, generada con Node sin dependencias y publicada en Cloudflare Pages.",
+  "description": "Web de Grupo Sobremesa: estática, generada con Node sin dependencias y publicada como Worker de Cloudflare.",
   "engines": { "node": ">=20" },
   "scripts": {
     "build": "node scripts/build.mjs",
