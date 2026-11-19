@@ -1,0 +1,206 @@
+    <!-- ========== PORTADA ========== -->
+    <section class="portada" aria-labelledby="portada-titulo">
+      <div class="portada__media">
+        <picture>
+          <source media="(min-width: 900px)" srcset="{{portada.imagenGrande}}">
+          <img src="{{portada.imagenMovil}}" alt="" width="1200" height="900" fetchpriority="high">
+        </picture>
+        {{{portadaVideo}}}
+      </div>
+      <div class="portada__contenido">
+        <img class="portada__logo" src="/logos/logo-hero.png" alt="{{nombre}}" width="1600" height="496" fetchpriority="high">
+        <!-- TEXTO PROVISIONAL -->
+        <h1 class="portada__titulo" id="portada-titulo">{{nombreCorto}} pone el sitio, el momento y la idea. <em>Vosotros, las ganas de quedaros.</em></h1>
+        <div class="portada__botones">
+          <a class="btn btn--light" href="#proximos">Próximos eventos</a>
+          <a class="btn btn--ghost-light" href="#colabora">Colabora con nosotros</a>
+        </div>
+      </div>
+      <button class="portada__pausa" type="button" hidden aria-pressed="false">Pausar vídeo</button>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Tardeos</span><span>Música</span><span>Fiesta</span><span>Experiencias</span><span>Viajes</span><span>Comunidad</span><span>Valencia</span>
+        <span>Tardeos</span><span>Música</span><span>Fiesta</span><span>Experiencias</span><span>Viajes</span><span>Comunidad</span><span>Valencia</span>
+      </div>
+    </div>
+
+    <!-- ========== PRÓXIMOS EVENTOS (se oculta entero si no hay ninguno) ========== -->
+    <section class="section proximos" id="proximos" aria-labelledby="proximos-titulo" data-bloque-eventos{{{ocultarSiNoHayEventos}}}>
+      <div class="container">
+        <header class="section-head section-head--fila">
+          <h2 class="section-title" id="proximos-titulo">Próximos eventos</h2>
+          <div class="carrusel__flechas" aria-hidden="true">
+            <button type="button" class="carrusel__flecha" data-carrusel="-1" tabindex="-1">←</button>
+            <button type="button" class="carrusel__flecha" data-carrusel="1" tabindex="-1">→</button>
+          </div>
+        </header>
+      </div>
+      <ul class="carrusel" role="list" data-lista-eventos>
+{{{eventosCarrusel}}}
+      </ul>
+      <div class="container">
+        <a class="link-arrow proximos__todos" href="/eventos/">Ver todos los eventos</a>
+      </div>
+    </section>
+
+    <!-- ========== MARCAS (solo logos, cada uno a su Instagram) ========== -->
+    <section class="marcas" aria-label="Nuestras marcas">
+      <div class="container">
+        <ul class="marcas__franja" role="list">
+{{{franjaMarcas}}}
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== NOSOTROS ========== -->
+    <section class="section intro" id="nosotros" aria-labelledby="nosotros-titulo">
+      <div class="container container--narrow reveal">
+        <p class="eyebrow">Nosotros</p>
+        <!-- TEXTO PROVISIONAL -->
+        <h2 class="section-title" id="nosotros-titulo">Lo mejor pasa en la sobremesa</h2>
+        <p class="intro__text">{{nombreCorto}} es ese momento en el que el plan debería acabar, pero realmente empieza.</p>
+        <p class="intro__text">Somos un grupo de marcas de ocio de Valencia: no hacemos eventos sueltos, construimos marcas alrededor de planes que la gente quiere repetir.</p>
+      </div>
+    </section>
+
+    <!-- ========== FÓRMULA ========== -->
+    <section class="section formula" aria-labelledby="formula-titulo">
+      <div class="container">
+        <header class="section-head reveal">
+          <p class="eyebrow">La fórmula {{nombreCorto}}</p>
+          <h2 class="section-title" id="formula-titulo">Cuatro cosas, siempre</h2>
+        </header>
+        <!-- TEXTO PROVISIONAL -->
+        <ol class="formula__lista" role="list">
+          <li class="reveal">
+            <span class="formula__num">01</span>
+            <h3 class="formula__titulo">El sitio</h3>
+            <p>Elegimos los locales uno a uno. Si no nos convence, no hay plan.</p>
+          </li>
+          <li class="reveal">
+            <span class="formula__num">02</span>
+            <h3 class="formula__titulo">El momento</h3>
+            <p>La tarde que se alarga. Esa hora en la que nadie quiere irse a casa.</p>
+          </li>
+          <li class="reveal">
+            <span class="formula__num">03</span>
+            <h3 class="formula__titulo">La idea</h3>
+            <p>Cada marca tiene su concepto y su estética. Nada de fiestas en serie.</p>
+          </li>
+          <li class="reveal">
+            <span class="formula__num">04</span>
+            <h3 class="formula__titulo">Las ganas de quedaros</h3>
+            <p>Eso lo ponéis vosotros. Y es lo que hace que el plan se repita.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ========== CIFRAS ========== -->
+    <section class="cifras" aria-label="{{nombreCorto}} en cifras">
+      <div class="container cifras__grid">
+        <!-- TEXTO PROVISIONAL -->
+        <p class="cifra reveal"><span class="cifra__mas">Más de</span><span class="cifra__num">{{cifras.personas}}</span><span class="cifra__texto">personas han pasado por {{nombreCorto}}</span></p>
+        <p class="cifra reveal"><span class="cifra__mas">Más de</span><span class="cifra__num">{{cifras.marcas}}</span><span class="cifra__texto">marcas han confiado en nosotros</span></p>
+      </div>
+    </section>
+
+    <!-- ========== NIEVE · {{nombreCorto}} × TRANSVIA XPERIENCE (de la web base) ========== -->
+    <!-- Línea de proyecto en colaboración. Transvia Xperience NO es una marca del grupo. -->
+    <section class="section snow" id="nieve" aria-labelledby="nieve-titulo">
+      <div class="container">
+        <header class="snow__head reveal">
+          <div>
+            <p class="eyebrow">Línea Nieve · Colaboración</p>
+            <h2 class="snow__title" id="nieve-titulo">Nieve</h2>
+          </div>
+          <!-- PENDIENTE: logo oficial de Transvia Xperience (con permiso) en lugar del nombre en texto -->
+          <p class="snow__lockup">
+            <img src="/logos/logo-white.png" alt="{{nombre}}" width="800" height="248" loading="lazy">
+            <span class="snow__x" aria-hidden="true">×</span>
+            <span class="snow__partner">Transvia Xperience</span>
+          </p>
+        </header>
+
+        <figure class="snow__video reveal">
+          <video class="snow__player" src="/video/nieve.mp4" poster="/img/nieve-poster.jpg"
+                 muted loop playsinline preload="none" width="1280" height="720"
+                 aria-label="Vídeo de la colaboración con Transvia Xperience: un grupo prepara los esquís y camina por la playa al atardecer"></video>
+          <button class="snow__toggle" type="button" aria-pressed="false">Pausar vídeo</button>
+        </figure>
+
+        <ul class="snow__strip reveal" role="list" aria-label="Veleta en Pas de la Casa">
+          <li><img src="/img/nieve-apres-ski.jpg" alt="Esquís junto a un cartel de «Après ski Veleta» con montañas nevadas" width="900" height="675" loading="lazy"></li>
+          <li><img src="/img/nieve-noche.jpg" alt="Público de noche en una fiesta en la nieve" width="900" height="675" loading="lazy"></li>
+          <li><img src="/img/nieve-grupo.jpg" alt="Grupo de amigas abrigadas en Pas de la Casa" width="900" height="675" loading="lazy"></li>
+        </ul>
+
+        <div class="snow__body reveal">
+          <!-- TEXTO PROVISIONAL -->
+          <p class="snow__lead">Viajes de esquí, après-ski y fiesta en la nieve.</p>
+          <div>
+            <p class="snow__text">Una línea de proyecto de {{nombre}} junto a Transvia Xperience: escapadas a la nieve para ir con tu gente.</p>
+            <ul class="tags" aria-label="Destinos">
+              <li>Pas de la Casa</li>
+              <li>Formigal</li>
+              <li>Après-ski</li>
+            </ul>
+            <div class="snow__actions">
+              <a class="btn" href="/contacto/?soy=asistente">Quiero saber más</a>
+              <a class="link-arrow" href="https://www.instagram.com/reel/Dd1pCXnOdPn/" target="_blank" rel="noopener">Ver el reel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ESPACIOS (de la web base; lista provisional hasta tener la de Manu) ========== -->
+    <section class="section partners" id="espacios" aria-labelledby="espacios-titulo">
+      <div class="container">
+        <header class="section-head reveal">
+          <h2 class="section-title" id="espacios-titulo">Espacios</h2>
+        </header>
+        <div class="partners__grid">
+          <figure class="partners__figure reveal">
+            <div class="partners__media">
+              <img src="/img/galeria-detalles.jpg" alt="Entradas y cajas de Veleta x Casa Molino sobre una mesa" width="900" height="900" loading="lazy">
+            </div>
+            <figcaption class="meta-label">Veleta × Casa Molino</figcaption>
+          </figure>
+          <ul class="partner-list reveal" role="list">
+            <li class="partner">
+              <h3 class="partner__name">Veles e Vents</h3>
+              <p class="partner__text">Tardeos de Veleta y Feria Veleta.</p>
+            </li>
+            <li class="partner">
+              <h3 class="partner__name">Casa Molino Rocafort</h3>
+              <p class="partner__text">Veleta × Casa Molino.</p>
+            </li>
+            <li class="partner">
+              <h3 class="partner__name">Malabar</h3>
+              <p class="partner__text">Fiestas de Solea.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== COLABORA ========== -->
+    <section class="colabora" id="colabora" aria-labelledby="colabora-titulo">
+      <img class="colabora__fondo" src="/img/cta-noche.jpg" alt="" width="1800" height="1350" loading="lazy">
+      <div class="colabora__contenido reveal">
+        <p class="eyebrow">Colabora con nosotros</p>
+        <!-- TEXTO PROVISIONAL -->
+        <h2 class="colabora__titulo" id="colabora-titulo">¿Hacemos algo juntos?</h2>
+        <p class="colabora__texto">Si tienes una marca, un local o quieres patrocinar un plan, cuéntanos qué tienes en mente.</p>
+        <div class="colabora__botones">
+          <a class="btn btn--light" href="/contacto/?soy=marca">Soy una marca</a>
+          <a class="btn btn--ghost-light" href="/contacto/?soy=local">Tengo un local</a>
+          <a class="btn btn--ghost-light" href="/contacto/?soy=patrocinador">Quiero patrocinar</a>
+        </div>
+      </div>
+    </section>
+
+    {{> cierre}}

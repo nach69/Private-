@@ -1,0 +1,25 @@
+<!-- ========== CIERRE: Instagram + contacto ========== -->
+    <section class="instagram" aria-labelledby="instagram-titulo">
+      <div class="container instagram__inner reveal">
+        <h2 class="instagram__titulo" id="instagram-titulo">Síguenos en Instagram</h2>
+        <p class="instagram__texto">Fechas, flyers y lo que pasó el último finde.</p>
+        <a class="btn" href="{{instagram.url}}" target="_blank" rel="noopener">{{instagram.usuario}}</a>
+      </div>
+    </section>
+
+    <section class="cierre" aria-labelledby="cierre-titulo">
+      <div class="container">
+        <h2 class="cierre__titulo" id="cierre-titulo">Contacto</h2>
+        <div class="cierre__columnas">
+          <div class="cierre__col">
+            <h3 class="meta-label">Instagram</h3>
+            <a href="{{instagram.url}}" target="_blank" rel="noopener">{{instagram.usuario}}</a>
+          </div>
+          <div class="cierre__col">
+            <h3 class="meta-label">Email</h3>
+            <a href="mailto:{{email}}">{{email}}</a>
+          </div>
+          <!-- PENDIENTE: decidir si va columna de teléfono (en config.json, "telefono") -->
+        </div>
+      </div>
+    </section>

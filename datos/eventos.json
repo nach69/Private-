@@ -1,0 +1,21 @@
+[
+  {
+    "marca": "basto",
+    "titulo": "Basto by Sobremesa",
+    "fecha": "2026-11-28",
+    "hora": null,
+    "lugar": null,
+    "flyer": null,
+    "entradas": "https://www.fourvenues.com/veleta/events/basto-by-sobremesa-28-11-2026-JB7W"
+  },
+  {
+    "marca": "solea",
+    "titulo": null,
+    "fecha": "2026-12-22",
+    "hora": null,
+    "lugar": null,
+    "flyer": null,
+    "entradas": null,
+    "censurado": true
+  }
+]

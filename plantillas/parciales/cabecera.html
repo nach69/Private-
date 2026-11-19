@@ -1,0 +1,36 @@
+<header class="site-header" id="top">
+    <div class="header-inner">
+      <a class="brand" href="/" aria-label="{{nombre}}, inicio">
+        <img class="brand-logo brand-logo--light" src="/logos/logo-white.png" alt="{{nombre}}" width="800" height="248">
+        <img class="brand-logo brand-logo--dark" src="/logos/logo-black.png" alt="" width="800" height="248" aria-hidden="true">
+      </a>
+
+      <nav class="main-nav" aria-label="Principal">
+        <ul>
+          <li><a href="/eventos/">Eventos</a></li>
+          <li><a href="/vosotros/">Vosotros</a></li>
+          <li><a href="/#nosotros">Nosotros</a></li>
+          <li><a href="/#nieve">Nieve</a></li>
+          <li><a class="btn btn--small" href="/contacto/">Contacto</a></li>
+        </ul>
+      </nav>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="menu-toggle__label">Menú</span>
+        <span class="menu-toggle__icon" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <nav aria-label="Menú móvil">
+        <ul>
+          <li><a href="/eventos/">Eventos</a></li>
+          <li><a href="/vosotros/">Vosotros</a></li>
+          <li><a href="/#nosotros">Nosotros</a></li>
+          <li><a href="/#nieve">Nieve</a></li>
+          <li><a href="/contacto/">Contacto</a></li>
+        </ul>
+      </nav>
+      <p class="mobile-menu__foot">{{nombre}} · Valencia</p>
+    </div>
+  </header>

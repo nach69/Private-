@@ -1,0 +1,19 @@
+    <section class="section pagina">
+      <div class="container">
+        <header class="section-head">
+          <p class="eyebrow">Eventos</p>
+          <h1 class="section-title">Próximos eventos</h1>
+        </header>
+
+        <ul class="eventos-lista" role="list" data-lista-eventos data-bloque-eventos{{{ocultarSiNoHayEventos}}}>
+{{{eventosLista}}}
+        </ul>
+
+        <!-- Si no queda ningún evento futuro, en lugar de un calendario vacío sale esto -->
+        <div class="sin-eventos" data-sin-eventos{{{mostrarSiNoHayEventos}}}>
+          <p class="sin-eventos__titulo">Estamos preparando las próximas fechas.</p>
+          <p>Las anunciamos primero en Instagram.</p>
+          <a class="btn" href="{{instagram.url}}" target="_blank" rel="noopener">Síguenos en {{instagram.usuario}}</a>
+        </div>
+      </div>
+    </section>

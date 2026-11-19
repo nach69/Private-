@@ -1,0 +1,96 @@
+    <section class="section pagina contact">
+      <div class="container contact__grid">
+        <div class="contact__intro">
+          <p class="eyebrow">Contacto</p>
+          <h1 class="section-title">Hablemos</h1>
+          <!-- TEXTO PROVISIONAL -->
+          <p>¿Tienes una marca, un local o quieres patrocinar un plan? ¿Vienes a nuestros eventos y quieres contarnos algo? Escríbenos y te respondemos.</p>
+          <p class="contact__directo">También en <a href="mailto:{{email}}">{{email}}</a> o en <a href="{{instagram.url}}" target="_blank" rel="noopener">{{instagram.usuario}}</a>.</p>
+        </div>
+
+        <form class="contact-form" id="form-contacto" action="/api/contacto" method="post" novalidate data-formulario>
+          <input type="hidden" name="tipo" value="contacto">
+          <input type="hidden" name="t" value="">
+
+          <div class="field">
+            <label for="cf-nombre">Nombre</label>
+            <input id="cf-nombre" name="nombre" type="text" autocomplete="name" required maxlength="100">
+            <p class="field__error" id="cf-nombre-error"></p>
+          </div>
+
+          <div class="field">
+            <label for="cf-email">Email</label>
+            <input id="cf-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="150">
+            <p class="field__error" id="cf-email-error"></p>
+          </div>
+
+          <div class="field">
+            <label for="cf-soy">Soy</label>
+            <select id="cf-soy" name="soy" required>
+              <option value="">Elige una opción</option>
+              <option value="asistente">Asistente</option>
+              <option value="marca">Marca</option>
+              <option value="local">Local</option>
+              <option value="patrocinador">Patrocinador</option>
+            </select>
+            <p class="field__error" id="cf-soy-error"></p>
+          </div>
+
+          <div class="field">
+            <label for="cf-mensaje">Mensaje</label>
+            <textarea id="cf-mensaje" name="mensaje" rows="5" required maxlength="3000"></textarea>
+            <p class="field__error" id="cf-mensaje-error"></p>
+          </div>
+
+          <!-- Campo trampa antispam: las personas no lo ven; si llega relleno, es un robot -->
+          <div class="hp" aria-hidden="true">
+            <label for="cf-web">No rellenar</label>
+            <input id="cf-web" name="web" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="field field--check">
+            <input id="cf-privacidad" name="privacidad" type="checkbox" value="si" required>
+            <label for="cf-privacidad">He leído la <a href="/privacidad/" target="_blank">política de privacidad</a> y acepto que uséis mis datos para responder a este mensaje.</label>
+            <p class="field__error" id="cf-privacidad-error"></p>
+          </div>
+
+          <button class="btn btn--block" type="submit">Enviar mensaje</button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ========== NEWSLETTER ========== -->
+    <section class="section newsletter" id="newsletter" aria-labelledby="newsletter-titulo">
+      <div class="container container--narrow">
+        <p class="eyebrow">Newsletter</p>
+        <h2 class="section-title" id="newsletter-titulo">Entérate antes que nadie</h2>
+        <!-- TEXTO PROVISIONAL -->
+        <p class="newsletter__texto">Te escribimos cuando haya fechas nuevas. Nada más.</p>
+
+        <form class="contact-form newsletter__form" id="form-newsletter" action="/api/contacto" method="post" novalidate data-formulario>
+          <input type="hidden" name="tipo" value="newsletter">
+          <input type="hidden" name="t" value="">
+
+          <div class="field">
+            <label for="nl-email">Email</label>
+            <input id="nl-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="150">
+            <p class="field__error" id="nl-email-error"></p>
+          </div>
+
+          <div class="hp" aria-hidden="true">
+            <label for="nl-web">No rellenar</label>
+            <input id="nl-web" name="web" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="field field--check">
+            <input id="nl-consentimiento" name="consentimiento" type="checkbox" value="si" required>
+            <label for="nl-consentimiento">Quiero recibir por email las novedades y eventos de {{nombre}}. He leído la <a href="/privacidad/" target="_blank">política de privacidad</a>. Puedo darme de baja cuando quiera.</label>
+            <p class="field__error" id="nl-consentimiento-error"></p>
+          </div>
+
+          <button class="btn" type="submit">Apuntarme</button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>

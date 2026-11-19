@@ -1,0 +1,13 @@
+{
+  "name": "grupo-sobremesa-web",
+  "private": true,
+  "type": "module",
+  "description": "Web de Grupo Sobremesa: estática, generada con Node sin dependencias y publicada en Cloudflare Pages.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node scripts/build.mjs && node --test tests/*.test.mjs",
+    "test:navegador": "node scripts/build.mjs && node tests/navegador.cjs",
+    "dev": "node scripts/build.mjs && cd dist && python3 -m http.server 8080"
+  }
+}
