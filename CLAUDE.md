@@ -10,5 +10,5 @@ Léelo antes de trabajar. Lo mantiene Claude; actualízalo cuando cambie algo.
 - Nada de terceros antes de aceptar cookies; sin analítica.
 - **DNS**: el correo de info@ está en Google Workspace. Guardar todos los registros antes de tocar nada y no tocar el DNS sin el visto bueno de Nacho y del informático.
 - Formulario: `src/worker.js` → `src/contacto.js` + `lib/formulario.mjs`, envío por Resend (pendiente de validar por el informático).
-- Probar antes de subir: `npm test`, `npm run test:navegador` y `npx wrangler deploy --dry-run`. Desde la sesión no se pueden abrir *.workers.dev ni la documentación de Cloudflare (red bloqueada).
+- Probar antes de subir: `npm test`, `npm run test:navegador` y `npx wrangler deploy --dry-run`. El entorno «Web Sobremesa» permite abrir private.super-unit-ca4a.workers.dev y developers.cloudflare.com (añadidos el 19/11 con permiso de Nacho) para comprobar la web publicada.
 - Base visual: la web base de Manu (blanco/negro/grises; Helvetica Neue Bold, Instrument Serif cursiva, Archivo). La marca «Sobremesa®» es suya (registrada por el grupo).
