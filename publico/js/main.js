@@ -89,36 +89,50 @@
     });
   });
 
-  /* ---------- Vídeos: solo se reproducen a la vista, con pausa y respetando «reducir movimiento» ---------- */
-  function controlarVideo(video, boton, soloPantallaGrande) {
-    if (!video || !boton) return;
-    var pantallaGrande = window.matchMedia('(min-width: 768px)').matches;
+  /* ---------- Vídeos: solo se reproducen a la vista y nunca solos si se pide «reducir movimiento» ---------- */
+  function controlarVideo(video, soloPantallaGrande) {
+    if (!video) return;
     // En móvil, la portada se queda con la foto (ahorra datos).
-    if (soloPantallaGrande && !pantallaGrande) { video.remove(); boton.remove(); return; }
-    boton.hidden = false;
-    var pausadoPorUsuario = reduceMotion;
-    function sync() {
-      boton.textContent = video.paused ? 'Reproducir vídeo' : 'Pausar vídeo';
-      boton.setAttribute('aria-pressed', String(video.paused));
-    }
-    video.addEventListener('play', sync);
-    video.addEventListener('pause', sync);
-    sync();
-    boton.addEventListener('click', function () {
-      if (video.paused) { pausadoPorUsuario = false; video.play().catch(function () {}); }
-      else { pausadoPorUsuario = true; video.pause(); }
-    });
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting && !pausadoPorUsuario) video.play().catch(function () {});
-          else if (!entry.isIntersecting) video.pause();
-        });
-      }, { threshold: 0.35 }).observe(video);
-    }
+    if (soloPantallaGrande && !window.matchMedia('(min-width: 768px)').matches) { video.remove(); return; }
+    if (reduceMotion || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) video.play().catch(function () {});
+        else video.pause();
+      });
+    }, { threshold: 0.35 }).observe(video);
   }
-  controlarVideo(document.querySelector('.portada__video'), document.querySelector('.portada__pausa'), true);
-  controlarVideo(document.querySelector('.snow__player'), document.querySelector('.snow__toggle'), false);
+  controlarVideo(document.querySelector('.portada__video'), true);
+  controlarVideo(document.querySelector('.snow__player'), false);
+
+  /* ---------- Cifras: cuenta desde 0 hasta el valor al entrar en pantalla ---------- */
+  var cifras = document.querySelectorAll('[data-contar]');
+  if (cifras.length && 'IntersectionObserver' in window && !reduceMotion) {
+    var formato = new Intl.NumberFormat('es-ES');
+    var contar = function (el) {
+      var fin = Number(String(el.getAttribute('data-contar')).replace(/\D/g, '')) || 0;
+      var inicio = null;
+      var duracion = 1600;
+      function paso(t) {
+        if (inicio === null) inicio = t;
+        var p = Math.min(1, (t - inicio) / duracion);
+        var suave = 1 - Math.pow(1 - p, 3);
+        el.textContent = formato.format(Math.round(fin * suave)).replace(/^(\d)(\d{3})$/, '$1.$2');
+        if (p < 1) requestAnimationFrame(paso);
+      }
+      requestAnimationFrame(paso);
+    };
+    var ioCifras = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { contar(entry.target); ioCifras.unobserve(entry.target); }
+      });
+    }, { threshold: 0.6 });
+    cifras.forEach(function (el) {
+      el.setAttribute('aria-label', el.textContent);
+      el.textContent = '0';
+      ioCifras.observe(el);
+    });
+  }
 
   /* ---------- Aviso de cookies (Aceptar / Denegar) ----------
      Hoy no se carga nada de terceros. Si algún día se añade, se marca así en el HTML:

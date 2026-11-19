@@ -25,6 +25,11 @@ eventos.forEach((ev, i) => erroresEvento(ev, idsMarcas).forEach((e) => errores.p
 eventos.forEach((ev) => {
   if (ev.flyer && !existsSync(join(RAIZ, 'flyers', ev.flyer))) errores.push(`eventos.json: no existe el flyer flyers/${ev.flyer}`);
 });
+const nieve = config.nieve || { logoTransvia: null, fotosExtra: [] };
+if (nieve.logoTransvia && !existsSync(join(RAIZ, 'publico', nieve.logoTransvia))) errores.push(`config.json: no existe el logo de Transvia publico${nieve.logoTransvia}`);
+(nieve.fotosExtra || []).forEach((f) => {
+  if (!existsSync(join(RAIZ, 'publico', f.src || ''))) errores.push(`config.json: no existe la foto de Nieve publico${f.src}`);
+});
 marcas.forEach((m) => {
   if (m.logo && !existsSync(join(RAIZ, 'publico', m.logo))) errores.push(`marcas.json: no existe el logo publico${m.logo}`);
 });
@@ -103,10 +108,11 @@ function tarjetaLista(ev, i) {
 }
 
 function franjaMarcas() {
-  return marcas.map((m) => {
+  // Solo las marcas con "enFranja": true en marcas.json
+  return marcas.filter((m) => m.enFranja !== false).map((m) => {
     const dentro = m.logo
       ? `<img src="${escapar(m.logo)}" alt="${escapar(m.nombre)}" width="150" height="150" loading="lazy">`
-      : `<span class="marca-cuadro__nombre">${escapar(m.nombre)}</span><span class="marca-cuadro__falta">logo pendiente</span>`;
+      : `<span class="marca-cuadro__nombre">${escapar(m.nombre)}</span>`;
     if (m.instagram) {
       return `<li><a class="marca-cuadro" href="${escapar(m.instagram)}" target="_blank" rel="noopener" aria-label="${escapar(m.nombre)} en Instagram">${dentro}</a></li>`;
     }
@@ -215,6 +221,11 @@ const bloquesComunes = {
         <source src="${escapar(config.portada.videoMp4)}" type="video/mp4">
       </video>`
     : '<!-- PENDIENTE: vídeo de portada (lo pasa Manu). Mientras, se ve la foto. -->',
+  logoTransvia: nieve.logoTransvia
+    ? `<img class="snow__partner-logo" src="${escapar(nieve.logoTransvia)}" alt="Transvia Xperience" loading="lazy">`
+    : '<span class="snow__partner">Transvia Xperience</span>',
+  fotosNieveExtra: (nieve.fotosExtra || []).map((f) =>
+    `          <li><img src="${escapar(f.src)}" alt="${escapar(f.alt || 'Viaje a la nieve con Veleta')}" width="900" height="675" loading="lazy"></li>`).join('\n'),
   anio: String(new Date().getFullYear())
 };
 

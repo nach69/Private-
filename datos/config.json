@@ -14,7 +14,8 @@
     "videoMp4": null,
     "videoWebm": null,
     "imagenMovil": "/img/hero-1200.jpg",
-    "imagenGrande": "/img/hero-2400.jpg"
+    "imagenGrande": "/img/hero-2400.jpg",
+    "_nota": "Fondo de la portada. PENDIENTE: nueva imagen de fondo; súbela a publico/img/ y pon aquí su ruta (/img/nombre.jpg) en imagenMovil e imagenGrande."
   },
   "cifras": {
     "personas": "5.000",
@@ -26,5 +27,10 @@
     "nif": null,
     "direccion": null
   },
-  "fechaTextosLegales": "19 de noviembre de 2026"
+  "fechaTextosLegales": "19 de noviembre de 2026",
+  "nieve": {
+    "_nota": "Sección Nieve. logoTransvia: ruta del logo de Transvia (p. ej. /logos/transvia.png); mientras sea null sale el nombre en texto. fotosExtra: fotos añadidas a la tira, subidas a publico/img/.",
+    "logoTransvia": null,
+    "fotosExtra": []
+  }
 }

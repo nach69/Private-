@@ -4,34 +4,39 @@
     "nombre": "Veleta",
     "logo": null,
     "instagram": "https://www.instagram.com/veletavalencia/",
-    "menores": false
+    "menores": false,
+    "enFranja": true
   },
   {
     "id": "solea",
     "nombre": "Solea",
     "logo": "/logos/marcas/solea.png",
     "instagram": "https://www.instagram.com/soleavalencia/",
-    "menores": false
+    "menores": false,
+    "enFranja": true
   },
   {
     "id": "tutto-passa",
     "nombre": "Tutto Passa",
     "logo": null,
     "instagram": null,
-    "menores": true
+    "menores": true,
+    "enFranja": true
   },
   {
     "id": "basto",
     "nombre": "Basto",
     "logo": null,
     "instagram": null,
-    "menores": false
+    "menores": false,
+    "enFranja": true
   },
   {
     "id": "yolo",
     "nombre": "Yolo",
     "logo": null,
     "instagram": null,
-    "menores": false
+    "menores": false,
+    "enFranja": false
   }
 ]
