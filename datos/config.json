@@ -15,7 +15,8 @@
     "videoWebm": null,
     "imagenMovil": "/img/hero-1200.jpg",
     "imagenGrande": "/img/hero-2400.jpg",
-    "_nota": "Fondo de la portada. PENDIENTE: nueva imagen de fondo; súbela a publico/img/ y pon aquí su ruta (/img/nombre.jpg) en imagenMovil e imagenGrande."
+    "_nota": "Fondo de la portada. fondoNuevo: ruta de la nueva imagen (súbela a publico/img/ y pon /img/nombre.jpg). Mientras sea null, sale la foto antigua con un aviso de PENDIENTE.",
+    "fondoNuevo": null
   },
   "cifras": {
     "personas": "5.000",
@@ -29,8 +30,17 @@
   },
   "fechaTextosLegales": "19 de noviembre de 2026",
   "nieve": {
-    "_nota": "Sección Nieve. logoTransvia: ruta del logo de Transvia (p. ej. /logos/transvia.png); mientras sea null sale el nombre en texto. fotosExtra: fotos añadidas a la tira, subidas a publico/img/.",
+    "_nota": "Sección Nieve. logoTransvia: ruta del logo (p. ej. /logos/transvia.png). fotosExtra: fotos añadidas a la tira (súbelas a publico/img/); mientras \"src\" sea null sale un hueco marcado como PENDIENTE.",
     "logoTransvia": null,
-    "fotosExtra": []
+    "fotosExtra": [
+      {
+        "src": null,
+        "alt": null
+      },
+      {
+        "src": null,
+        "alt": null
+      }
+    ]
   }
 }

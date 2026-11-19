@@ -2,13 +2,14 @@
     <section class="portada" aria-labelledby="portada-titulo">
       <div class="portada__media">
         <picture>
-          <source media="(min-width: 900px)" srcset="{{portada.imagenGrande}}">
-          <img src="{{portada.imagenMovil}}" alt="" width="1200" height="900" fetchpriority="high">
+          <source media="(min-width: 900px)" srcset="{{{fondoPortadaGrande}}}">
+          <img src="{{{fondoPortadaMovil}}}" alt="" width="1200" height="900" fetchpriority="high">
         </picture>
         {{{portadaVideo}}}
       </div>
       <div class="portada__contenido">
         <h1 class="portada__titulo-logo" id="portada-titulo"><img class="portada__logo" src="/logos/logo-hero.png" alt="{{nombre}}" width="1600" height="496" fetchpriority="high"></h1>
+        {{{avisoFondo}}}
         <div class="portada__botones">
           <a class="btn btn--light" href="#proximos">Próximos eventos</a>
           <a class="btn btn--ghost-light" href="#colabora">Colabora con nosotros</a>
@@ -22,6 +23,7 @@
         <span>Tardeos</span><span>Música</span><span>Fiesta</span><span>Experiencias</span><span>Viajes</span><span>Comunidad</span><span>Valencia</span>
       </div>
     </div>
+    {{{avisoFuente}}}
 
     <!-- ========== PRÓXIMOS EVENTOS (se oculta entero si no hay ninguno) ========== -->
     <section class="section proximos" id="proximos" aria-labelledby="proximos-titulo" data-bloque-eventos{{{ocultarSiNoHayEventos}}}>

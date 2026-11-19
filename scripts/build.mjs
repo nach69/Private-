@@ -28,8 +28,11 @@ eventos.forEach((ev) => {
 const nieve = config.nieve || { logoTransvia: null, fotosExtra: [] };
 if (nieve.logoTransvia && !existsSync(join(RAIZ, 'publico', nieve.logoTransvia))) errores.push(`config.json: no existe el logo de Transvia publico${nieve.logoTransvia}`);
 (nieve.fotosExtra || []).forEach((f) => {
-  if (!existsSync(join(RAIZ, 'publico', f.src || ''))) errores.push(`config.json: no existe la foto de Nieve publico${f.src}`);
+  if (f.src && !existsSync(join(RAIZ, 'publico', f.src))) errores.push(`config.json: no existe la foto de Nieve publico${f.src}`);
 });
+const fondoNuevo = config.portada.fondoNuevo;
+if (fondoNuevo && !existsSync(join(RAIZ, 'publico', fondoNuevo))) errores.push(`config.json: no existe el fondo de portada publico${fondoNuevo}`);
+const hayFuenteAcento = existsSync(join(RAIZ, 'publico/fuentes/rl-madena.woff2'));
 marcas.forEach((m) => {
   if (m.logo && !existsSync(join(RAIZ, 'publico', m.logo))) errores.push(`marcas.json: no existe el logo publico${m.logo}`);
 });
@@ -223,9 +226,14 @@ const bloquesComunes = {
     : '<!-- PENDIENTE: vídeo de portada (lo pasa Manu). Mientras, se ve la foto. -->',
   logoTransvia: nieve.logoTransvia
     ? `<img class="snow__partner-logo" src="${escapar(nieve.logoTransvia)}" alt="Transvia Xperience" loading="lazy">`
-    : '<span class="snow__partner">Transvia Xperience</span>',
-  fotosNieveExtra: (nieve.fotosExtra || []).map((f) =>
-    `          <li><img src="${escapar(f.src)}" alt="${escapar(f.alt || 'Viaje a la nieve con Veleta')}" width="900" height="675" loading="lazy"></li>`).join('\n'),
+    : '<span class="hueco hueco--logo">PENDIENTE: logo de Transvia</span>',
+  fotosNieveExtra: (nieve.fotosExtra || []).map((f, i) => f.src
+    ? `          <li><img src="${escapar(f.src)}" alt="${escapar(f.alt || 'Viaje a la nieve con Veleta')}" width="900" height="675" loading="lazy"></li>`
+    : `          <li class="hueco">PENDIENTE: foto ${i + 1} de Nieve</li>`).join('\n'),
+  fondoPortadaMovil: escapar(fondoNuevo || config.portada.imagenMovil),
+  fondoPortadaGrande: escapar(fondoNuevo || config.portada.imagenGrande),
+  avisoFondo: fondoNuevo ? '' : '<p class="portada__aviso"><mark class="pendiente">PENDIENTE: nueva imagen de fondo</mark></p>',
+  avisoFuente: hayFuenteAcento ? '' : '<p class="marquee__aviso"><mark class="pendiente">PENDIENTE: archivo de la tipografía RL Madena</mark></p>',
   anio: String(new Date().getFullYear())
 };
 
