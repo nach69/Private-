@@ -1,6 +1,6 @@
 # Web de Grupo Sobremesa
 
-Web pública de Grupo Sobremesa (gruposobremesa.com). Se publica sola en **Cloudflare Pages** cada vez que se guarda un cambio en la rama `main` de este repositorio.
+Web pública de Grupo Sobremesa (gruposobremesa.com). Se publica sola en **Cloudflare** (un *Worker* llamado `private`) cada vez que se guarda un cambio en la rama `main` de este repositorio. Dirección de prueba: https://private.super-unit-ca4a.workers.dev
 
 No tiene base de datos ni panel: todo lo que cambia (eventos, marcas, fotos) está en archivos de este repositorio.
 
@@ -34,7 +34,7 @@ No tiene base de datos ni panel: todo lo que cambia (eventos, marcas, fotos) est
 
 No hace falta borrar los eventos pasados: la web los esconde sola al día siguiente. Si no queda ninguno, el bloque de «Próximos eventos» desaparece en vez de quedarse vacío.
 
-Si te equivocas en el formato (una fecha mal escrita, una marca que no existe…), Cloudflare **no publica** el cambio y la web sigue como estaba. En Cloudflare, en *Deployments*, verás el error explicado en español.
+Si te equivocas en el formato (una fecha mal escrita, una marca que no existe…), Cloudflare **no publica** el cambio y la web sigue como estaba. En Cloudflare, dentro del Worker, en *Deployments* / *Builds*, verás el error explicado en español.
 
 ## Cómo añadir fotos a «Vosotros»
 
@@ -65,9 +65,10 @@ El nombre «Grupo Sobremesa» se cambia **solo** en `datos/config.json` (`nombre
 ## Parte técnica
 
 - Generador propio sin dependencias: `scripts/build.mjs` junta `plantillas/` + `datos/` + `galeria/` + `flyers/` + `publico/` en `dist/`.
-- Formulario de contacto y newsletter: función de Cloudflare en `functions/api/contacto.js` (lógica en `lib/formulario.mjs`). Envía a info@ con la API de **Resend**. Antispam: campo trampa, tiempo mínimo de rellenado, comprobación de origen y límite de enlaces.
+- Worker de Cloudflare: `src/worker.js` sirve `dist/` y atiende `/api/contacto` (`src/contacto.js`, lógica en `lib/formulario.mjs`). Configuración en `wrangler.jsonc`.
+- Formulario de contacto y newsletter: Envía a info@ con la API de **Resend**. Antispam: campo trampa, tiempo mínimo de rellenado, comprobación de origen y límite de enlaces.
 - Sin cookies ni nada de terceros. El aviso de cookies guarda la elección en el navegador (`sm_cookies`); si algún día se incrusta algo de fuera, se marca con `data-consent-src` y solo se carga tras «Aceptar».
-- Cabeceras de seguridad y caché en `publico/_headers`. La dirección de prueba `*.pages.dev` lleva `noindex`.
+- Cabeceras de seguridad y caché en `publico/_headers`. La dirección de prueba `workers.dev` lleva `noindex`.
 
 ### Probar en local
 
@@ -75,12 +76,14 @@ El nombre «Grupo Sobremesa» se cambia **solo** en `datos/config.json` (`nombre
 npm test                 # construye y pasa las pruebas de lógica y del formulario
 npm run test:navegador   # pruebas en Chromium (necesita Playwright)
 npm run dev              # construye y sirve la web en http://localhost:8080
+npx wrangler dev         # igual, pero imitando Cloudflare (incluye el formulario)
 ```
 
-### Configuración de Cloudflare Pages
+### Configuración de Cloudflare (Worker conectado a GitHub)
 
-- *Framework preset*: ninguno · *Build command*: `npm run build` · *Build output directory*: `dist`
-- Variables (Settings → Variables and Secrets):
+- *Build command*: `npm run build` · *Deploy command*: `npx wrangler deploy` · rama `main`.
+- El nombre del Worker en el panel tiene que ser el mismo que `name` en `wrangler.jsonc` (`private`).
+- Variables (el Worker → Settings → Variables and Secrets):
   - `RESEND_API_KEY` (como **secreto**)
   - `EMAIL_FROM`, por ejemplo `Web Grupo Sobremesa <web@gruposobremesa.com>`
   - `EMAIL_TO` (opcional; por defecto `info@gruposobremesa.com`)

@@ -1,7 +1,7 @@
-// Prueba la función de Cloudflare tal cual, con un envío de correo simulado.
+// Prueba el formulario del Worker tal cual, con un envío de correo simulado.
 import { test, mock } from 'node:test';
 import assert from 'node:assert/strict';
-import { onRequestPost } from '../functions/api/contacto.js';
+import { onRequestPost } from '../src/contacto.js';
 
 const URL_WEB = 'https://gruposobremesa.com/api/contacto';
 function peticion(campos, cabeceras = {}) {

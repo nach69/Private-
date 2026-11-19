@@ -6,8 +6,8 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
   X-Frame-Options: DENY
 
-# La dirección de prueba (*.pages.dev) no debe salir en Google
-https://:project.pages.dev/*
+# La dirección de prueba (workers.dev) no debe salir en Google
+https://private.super-unit-ca4a.workers.dev/*
   X-Robots-Tag: noindex
 
 /fuentes/*

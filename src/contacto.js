@@ -1,11 +1,11 @@
-// Función de Cloudflare Pages: recibe el formulario de contacto y el de la newsletter
+// Recibe el formulario de contacto y el de la newsletter
 // y los manda por correo a info@ usando la API de Resend (plan gratuito).
 //
-// Variables que hay que poner en Cloudflare (Settings → Variables and Secrets):
+// Variables que hay que poner en Cloudflare (el Worker → Settings → Variables and Secrets):
 //   RESEND_API_KEY  (secreto)  clave de Resend
 //   EMAIL_FROM                 p. ej.  Web Grupo Sobremesa <web@gruposobremesa.com>
 //   EMAIL_TO                   opcional; por defecto info@gruposobremesa.com
-import { revisarEnvio, componerCorreo } from '../../lib/formulario.mjs';
+import { revisarEnvio, componerCorreo } from '../lib/formulario.mjs';
 
 const DESTINO_POR_DEFECTO = 'info@gruposobremesa.com';
 
