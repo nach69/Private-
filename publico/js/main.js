@@ -136,7 +136,8 @@
     if (!video) return;
     // El vídeo de la portada es solo para el móvil; en ordenador se queda la foto.
     if (soloMovil && window.matchMedia('(min-width: 768px)').matches) { video.remove(); return; }
-    if (reduceMotion) { video.removeAttribute('autoplay'); video.pause(); return; }
+    // La portada se reproduce siempre (decisión de Nacho, 20/11), también con «reducir movimiento».
+    if (reduceMotion && !soloMovil) { video.removeAttribute('autoplay'); video.pause(); return; }
     if (!('IntersectionObserver' in window)) { video.play().catch(function () {}); return; }
     new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
