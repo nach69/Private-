@@ -11,4 +11,4 @@ Léelo antes de trabajar. Lo mantiene Claude; actualízalo cuando cambie algo.
 - **DNS**: el correo de info@ está en Google Workspace. Guardar todos los registros antes de tocar nada y no tocar el DNS sin el visto bueno de Nacho y del informático.
 - Formulario: `src/worker.js` → `src/contacto.js` + `lib/formulario.mjs`, envío por Resend (pendiente de validar por el informático).
 - Probar antes de subir: `npm test`, `npm run test:navegador` y `npx wrangler deploy --dry-run`. El entorno «Web Sobremesa» permite abrir private.super-unit-ca4a.workers.dev y developers.cloudflare.com (añadidos el 19/11 con permiso de Nacho) para comprobar la web publicada.
-- Base visual: la web base de Manu (blanco/negro/grises; Helvetica Neue Bold, Instrument Serif cursiva, Archivo). La marca «Sobremesa®» es suya (registrada por el grupo).
+- Tipografía (20/11): solo RL Madena (títulos, `scaleX(1.15)`, archivo en publico/fuentes/rl-madena.woff2; el grupo tiene licencia para la web, confirmado por Nacho) y Helvetica Neue (textos). Colores: blanco/negro/grises; en Nieve, acentos en rojo Transvia #E52125. La marca «Sobremesa®» es suya (registrada por el grupo).

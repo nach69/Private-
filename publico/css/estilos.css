@@ -1070,3 +1070,16 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 }
 .footer__icono:hover, .footer__icono:focus-visible { color: var(--white); background: rgba(255, 255, 255, .08); }
 .footer__icono svg { width: 24px; height: 24px; }
+
+/* =========================================================
+   NIEVE: acentos en el rojo de Transvia Xperience
+   ========================================================= */
+.snow { --rojo-transvia: #E52125; }
+.snow .eyebrow { color: var(--rojo-transvia); }
+.snow__x { color: var(--rojo-transvia); }
+.snow__title { -webkit-text-stroke-color: var(--rojo-transvia); }
+.snow__title:hover { color: var(--rojo-transvia); }
+.snow__video { border-top: 3px solid var(--rojo-transvia); }
+.snow__lead { color: var(--white); border-left: 3px solid var(--rojo-transvia); padding-left: 14px; }
+.snow .btn.snow__reel { background: var(--rojo-transvia); border-color: var(--rojo-transvia); color: var(--white); }
+@media (hover: hover) { .snow .btn.snow__reel:hover { background: transparent; color: var(--white); border-color: var(--rojo-transvia); } }
