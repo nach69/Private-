@@ -4,7 +4,7 @@
    ========================================================= */
 
 /* Fuente de acento: RL Madena (como el «Sobremesa» del logo). Es de pago: hay que subir
-   el archivo con licencia a publico/fuentes/rl-madena.woff2. Mientras falte, se usa la de reserva. */
+   el archivo con licencia está en publico/fuentes/rl-madena.woff2. */
 @font-face {
   font-family: "RL Madena";
   src: url("/fuentes/rl-madena.woff2") format("woff2");
@@ -24,10 +24,10 @@
   --error: #111;
 
   /* Fuente principal: Helvetica en todo (títulos, textos, etiquetas) */
-  --font-display: Helvetica, Arial, sans-serif;
-  --font-body: Helvetica, Arial, sans-serif;
+  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
   /* Fuente de acento: RL Madena, algo estirada en horizontal como el «Sobremesa» del logo */
-  --font-script: "RL Madena", "Didot", "Bodoni 72", "Times New Roman", serif;
+  --font-script: "RL Madena", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --acento-estirado: scaleX(1.08);
 
   --gutter: 20px;
@@ -296,7 +296,7 @@ body::after {
   display: inline-flex;
   animation: marquee 28s linear infinite;
 }
-/* Franja en serif itálica editorial (contrasta con la Helvetica Bold de los titulares) */
+/* Franja de etiquetas */
 .marquee span {
   font-family: var(--font-script);
   font-style: normal;
@@ -926,7 +926,7 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 :root {
   --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-script: "RL Madena", "Times New Roman", serif;
+  --font-script: "RL Madena", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --madena-x: 1.15;
 }
 
@@ -1083,3 +1083,78 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 .snow__lead { color: var(--white); border-left: 3px solid var(--rojo-transvia); padding-left: 14px; }
 .snow .btn.snow__reel { background: var(--rojo-transvia); border-color: var(--rojo-transvia); color: var(--white); }
 @media (hover: hover) { .snow .btn.snow__reel:hover { background: transparent; color: var(--white); border-color: var(--rojo-transvia); } }
+
+/* Foto vertical de Nieve: solo en el móvil */
+.snow__foto-movil { display: none; }
+
+/* =========================================================
+   SOLO MÓVIL (< 768 px)
+   ========================================================= */
+@media (max-width: 767px) {
+  /* 1. Portada: vídeo de fondo, sin franja de etiquetas */
+  .portada__video { display: block; object-fit: cover; }
+  .marquee { display: none; }
+
+  /* 2. Próximos eventos */
+  .proximos .section-title {
+    font-family: var(--font-display); font-weight: 700; letter-spacing: -0.025em;
+    transform: none; width: auto;
+  }
+  .evento__flyer::before {
+    content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  }
+  .evento__flyer::after { z-index: 2; }
+
+  /* 3. Logos de marcas: fuera */
+  .marcas { display: none; }
+
+  /* 4. Nieve */
+  .snow .eyebrow { display: none; }
+  .snow__head { justify-items: center; text-align: center; }
+  .snow__title { transform-origin: center; margin-left: auto; margin-right: auto; }
+  .snow__lockup { justify-content: center; align-items: center; gap: 14px; width: 100%; }
+  .snow__lockup img, .snow__partner-logo { height: 34px; width: 108px; object-fit: contain; }
+  .snow__video { border-top: 0; }
+  .snow__foto-movil { display: block; margin: 10px 0 0; aspect-ratio: 4 / 5; overflow: hidden; background: #151515; }
+  .snow__foto-movil img { width: 100%; height: 100%; object-fit: cover; }
+  .snow__lead { border-left: 0; padding-left: 0; }
+  .snow__lead, .snow__text, .snow .btn.snow__reel { font-family: var(--font-body); font-weight: 700; }
+
+  /* 5. Nosotros */
+  .intro__etiqueta {
+    letter-spacing: -0.03em;
+    width: 100%;
+    transform: scaleY(1.25);
+    transform-origin: left bottom;
+    margin-top: .25em;
+  }
+  .intro .section-title {
+    font-family: var(--font-body); font-weight: 700; letter-spacing: -0.025em;
+    transform: none; width: auto;
+  }
+  .intro__text { font-family: var(--font-body); }
+  .intro .cifra { display: grid; justify-items: center; gap: 8px; }
+  .intro .cifra__mas { display: block; margin: 0; }
+  .intro .cifra__num {
+    font-family: var(--font-body); font-weight: 700; letter-spacing: -0.04em;
+    transform: none; width: auto; line-height: 1;
+    font-size: clamp(3.4rem, 17vw, 5rem);
+    font-variant-numeric: tabular-nums;
+  }
+  .intro .cifra__texto { display: block; max-width: 24ch; }
+
+  /* 6. Colabora */
+  .colabora, .colabora .eyebrow, .colabora__titulo, .colabora__texto, .colabora .btn {
+    font-family: var(--font-body); letter-spacing: -0.025em;
+  }
+  .colabora__titulo { font-weight: 700; transform: none; width: auto; }
+
+  /* 7. Síguenos en Instagram: fuera */
+  .instagram { display: none; }
+
+  /* 8. Pie: logo a la izquierda e iconos a la derecha, con el mismo margen exterior */
+  .footer__inner { justify-items: stretch; }
+  .footer__marca { justify-content: space-between; width: 100%; }
+  .footer__iconos { gap: 8px; margin-right: -10px; } /* el icono (24 px) queda alineado con el margen, el área táctil sigue en 44 px */
+}

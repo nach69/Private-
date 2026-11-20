@@ -11,12 +11,13 @@
   "telefono": null,
   "descripcion": "Grupo de marcas de ocio de Valencia. No hacemos eventos sueltos: construimos marcas alrededor de planes que la gente quiere repetir.",
   "portada": {
-    "videoMp4": null,
+    "videoMp4": "/video/casino-veleta.mp4",
     "videoWebm": null,
     "imagenMovil": "/img/hero-1200.jpg",
     "imagenGrande": "/img/hero-2400.jpg",
-    "_nota": "Fondo de la portada. fondoNuevo: ruta de la nueva imagen (súbela a publico/img/ y pon /img/nombre.jpg). Mientras sea null, sale la foto antigua con un aviso de PENDIENTE.",
-    "fondoNuevo": null
+    "_nota": "Fondo de la portada. En el móvil se ve el vídeo (videoMp4, recap de Casino Veleta); en ordenador, la foto (imagenGrande). fondoNuevo: ruta de otra foto de fondo si se quiere cambiar.",
+    "fondoNuevo": null,
+    "videoPoster": "/img/casino-veleta-poster.jpg"
   },
   "cifras": {
     "personas": "5.000",

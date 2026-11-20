@@ -231,12 +231,13 @@ const bloquesComunes = {
   mostrarSiNoHayEventos: futuros.length ? ' hidden' : '',
   franjaMarcas: franjaMarcas(),
   galeria: galeriaHTML(fotos),
+  // Vídeo de fondo de la portada: solo en el móvil (en ordenador se queda la foto).
   portadaVideo: config.portada.videoMp4
-    ? `<video class="portada__video" muted loop playsinline preload="none" poster="${escapar(config.portada.imagenMovil)}" data-autoplay aria-hidden="true">
+    ? `<video class="portada__video" autoplay muted loop playsinline preload="metadata" poster="${escapar(config.portada.videoPoster || config.portada.imagenMovil)}" data-solo-movil aria-hidden="true">
         ${config.portada.videoWebm ? `<source src="${escapar(config.portada.videoWebm)}" type="video/webm">` : ''}
         <source src="${escapar(config.portada.videoMp4)}" type="video/mp4">
       </video>`
-    : '<!-- PENDIENTE: vídeo de portada (lo pasa Manu). Mientras, se ve la foto. -->',
+    : '',
   logoTransvia: nieve.logoTransvia
     ? `<img class="snow__partner-logo" src="${escapar(nieve.logoTransvia)}" alt="Transvia Xperience" loading="lazy">`
     : '<span class="hueco hueco--logo">PENDIENTE: logo de Transvia</span>',

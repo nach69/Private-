@@ -132,34 +132,36 @@
   });
 
   /* ---------- Vídeos: solo se reproducen a la vista y nunca solos si se pide «reducir movimiento» ---------- */
-  function controlarVideo(video, soloPantallaGrande) {
+  function controlarVideo(video, soloMovil) {
     if (!video) return;
-    // En móvil, la portada se queda con la foto (ahorra datos).
-    if (soloPantallaGrande && !window.matchMedia('(min-width: 768px)').matches) { video.remove(); return; }
-    if (reduceMotion || !('IntersectionObserver' in window)) return;
+    // El vídeo de la portada es solo para el móvil; en ordenador se queda la foto.
+    if (soloMovil && window.matchMedia('(min-width: 768px)').matches) { video.remove(); return; }
+    if (reduceMotion) { video.removeAttribute('autoplay'); video.pause(); return; }
+    if (!('IntersectionObserver' in window)) { video.play().catch(function () {}); return; }
     new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) video.play().catch(function () {});
         else video.pause();
       });
-    }, { threshold: 0.35 }).observe(video);
+    }, { threshold: 0.2 }).observe(video);
   }
   controlarVideo(document.querySelector('.portada__video'), true);
   controlarVideo(document.querySelector('.snow__player'), false);
 
-  /* ---------- Cifras: cuenta desde 0 hasta el valor al entrar en pantalla ---------- */
+  /* ---------- Cifras: cuentan desde 0 hasta el valor al entrar en pantalla ----------
+     Es un cambio de número, no un movimiento: también se hace con «reducir movimiento», pero más rápido. */
   var cifras = document.querySelectorAll('[data-contar]');
-  if (cifras.length && 'IntersectionObserver' in window && !reduceMotion) {
-    var formato = new Intl.NumberFormat('es-ES');
+  if (cifras.length && 'IntersectionObserver' in window) {
+    var formatear = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
     var contar = function (el) {
       var fin = Number(String(el.getAttribute('data-contar')).replace(/\D/g, '')) || 0;
+      var duracion = reduceMotion ? 500 : 1800;
       var inicio = null;
-      var duracion = 1600;
       function paso(t) {
         if (inicio === null) inicio = t;
         var p = Math.min(1, (t - inicio) / duracion);
         var suave = 1 - Math.pow(1 - p, 3);
-        el.textContent = formato.format(Math.round(fin * suave)).replace(/^(\d)(\d{3})$/, '$1.$2');
+        el.textContent = formatear(Math.round(fin * suave));
         if (p < 1) requestAnimationFrame(paso);
       }
       requestAnimationFrame(paso);
@@ -168,7 +170,7 @@
       entries.forEach(function (entry) {
         if (entry.isIntersecting) { contar(entry.target); ioCifras.unobserve(entry.target); }
       });
-    }, { threshold: 0.6 });
+    }, { threshold: 0, rootMargin: '0px 0px -15% 0px' });
     cifras.forEach(function (el) {
       el.setAttribute('aria-label', el.textContent);
       el.textContent = '0';
