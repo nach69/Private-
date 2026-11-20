@@ -1356,3 +1356,47 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
   .escena__cabecera { grid-template-columns: 1fr auto; align-items: end; }
   .snow--escena .snow__lockup { justify-content: flex-end; }
 }
+
+/* =========================================================
+   Ajustes 21/11
+   ========================================================= */
+/* Próximos eventos: la cinta también se arrastra con el dedo (los gestos verticales siguen moviendo la página) */
+.carrusel--cinta { touch-action: pan-y; cursor: grab; }
+.carrusel--cinta:active { cursor: grabbing; }
+.carrusel--cinta a { -webkit-user-drag: none; }
+/* Pie de los flyers: «28 de noviembre», en Helvetica */
+.evento__fecha {
+  font-family: var(--font-body); font-weight: 700; letter-spacing: -0.01em; text-transform: none;
+  transform: none; width: auto;
+}
+@media (max-width: 767px) {
+  .evento__fecha {
+    font-family: var(--font-body); font-weight: 700; letter-spacing: -0.01em;
+    font-size: 1.15rem; line-height: 1.2; transform: none; width: auto;
+  }
+}
+
+/* Nieve: sin título; logos grandes, del mismo tamaño, con nieve acumulada encima */
+.snow__lockup--nieve {
+  display: flex; flex-wrap: nowrap; align-items: center; justify-content: center;
+  gap: clamp(10px, 3vw, 28px); width: 100%; margin: 0;
+}
+.snow__lockup--nieve .snow__logo {
+  display: block; flex: 0 0 auto;
+  width: min(40vw, 340px); aspect-ratio: 900 / 330;
+}
+.snow__lockup--nieve .snow__logo img,
+.snow__lockup--nieve .snow__logo--transvia img { width: 100%; height: 100%; object-fit: contain; }
+.snow__lockup--nieve .snow__x { font-size: clamp(1.4rem, 5vw, 2.4rem); color: var(--white); }
+.mov-nieve .snow__lockup--nieve > .snow__logo:first-child {
+  translate: calc((1 - var(--q, 1)) * -45vw) 0;
+  opacity: calc(0.3 + var(--q, 1) * 0.7);
+}
+.mov-nieve .snow__lockup--nieve > .snow__logo--transvia {
+  translate: calc((1 - var(--q, 1)) * 45vw) 0;
+  opacity: calc(0.3 + var(--q, 1) * 0.7);
+}
+@media (min-width: 768px) {
+  .snow--escena .snow__lockup--nieve { justify-content: flex-start; }
+  .escena__cabecera { grid-template-columns: 1fr; }
+}

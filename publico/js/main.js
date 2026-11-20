@@ -122,7 +122,7 @@
   var nieveTitulo = !reduceMotion && document.querySelector('.snow__title');
   var nieveLockup = !reduceMotion && document.querySelector('.snow__lockup');
   var nieveEscena = !reduceMotion && document.querySelector('.snow--escena');
-  if (nieveTitulo) document.documentElement.classList.add('mov-nieve');
+  if (nieveLockup) document.documentElement.classList.add('mov-nieve');
 
   var pendiente = false;
   function pedirFrame() { if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); } }
@@ -175,96 +175,91 @@
 
     var x = 0;
     var velocidad = 32; // píxeles por segundo
-    var parado = false;
+    var parado = false;     // mantenido pulsado o arrastrando
     var visible = true;
     var ultimo = 0;
+    var reanudarEn = 0;     // tras soltar, espera un poco antes de volver a moverse sola
+    var destino = null;     // flyer al que se ajusta al soltar
+    function envolver(v) {  // la cinta no tiene final: mantiene x dentro de una tanda
+      var tanda = anchoTanda();
+      if (tanda <= 0) return v;
+      while (v > 0) v -= tanda;
+      while (v <= -tanda) v += tanda;
+      return v;
+    }
+    function paso() { return cinta.children[1] ? cinta.children[1].offsetLeft - cinta.children[0].offsetLeft : 1; }
     function avanzar(t) {
-      if (ultimo && !parado && visible) {
-        var dt = Math.min(64, t - ultimo) / 1000;
-        x -= velocidad * dt;
-        var tanda = anchoTanda();
-        if (tanda > 0 && -x >= tanda) x += tanda;
+      var dt = ultimo ? Math.min(64, t - ultimo) / 1000 : 0;
+      ultimo = t;
+      if (visible && !parado) {
+        if (destino !== null) {
+          // Ajuste suave al flyer más cercano
+          x += (destino - x) * Math.min(1, dt * 10);
+          if (Math.abs(destino - x) < 0.5) { x = destino; destino = null; }
+        } else if (t >= reanudarEn) {
+          x -= velocidad * dt;
+        }
+        x = envolver(x);
         cinta.style.setProperty('--x', x.toFixed(2) + 'px');
       }
-      ultimo = t;
       requestAnimationFrame(avanzar);
     }
     requestAnimationFrame(avanzar);
 
-    // Mantener pulsado: para la cinta y destaca el flyer
+    // Tocar: mantener pulsado para la cinta y destaca el flyer; arrastrar a los lados la mueve a mano
     var activo = null;
-    function soltar() {
-      parado = false;
-      if (activo) { activo.classList.remove('is-activo'); activo = null; }
-    }
+    var inicioX = 0, inicioY = 0, xAlEmpezar = 0, arrastrando = false, decidido = false, puntero = null;
     cinta.addEventListener('pointerdown', function (e) {
-      var li = e.target.closest('.evento');
-      if (!li) return;
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      puntero = e.pointerId;
+      inicioX = e.clientX; inicioY = e.clientY; xAlEmpezar = x;
+      arrastrando = false; decidido = false; destino = null;
       parado = true;
-      activo = li;
-      li.classList.add('is-activo');
+      var li = e.target.closest('.evento');
+      if (li) { activo = li; li.classList.add('is-activo'); }
     });
-    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) { cinta.addEventListener(ev, soltar); });
+    cinta.addEventListener('pointermove', function (e) {
+      if (e.pointerId !== puntero) return;
+      var dx = e.clientX - inicioX, dy = e.clientY - inicioY;
+      if (!decidido && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
+        decidido = true;
+        arrastrando = Math.abs(dx) > Math.abs(dy); // si el gesto es vertical, se deja hacer scroll a la página
+        if (arrastrando) {
+          try { cinta.setPointerCapture(e.pointerId); } catch (err) { /* sin captura */ }
+          if (activo) { activo.classList.remove('is-activo'); activo = null; }
+        } else {
+          soltar();
+        }
+      }
+      if (arrastrando) {
+        x = envolver(xAlEmpezar + dx);
+        cinta.style.setProperty('--x', x.toFixed(2) + 'px');
+      }
+    });
+    function soltar() {
+      if (puntero === null && !parado) return;
+      if (arrastrando) {
+        var p = paso();
+        destino = Math.round(x / p) * p; // se ajusta al flyer más cercano
+      }
+      puntero = null;
+      parado = false;
+      reanudarEn = performance.now() + (arrastrando ? 1800 : 300);
+      if (activo) { activo.classList.remove('is-activo'); activo = null; }
+      // Si ha sido un arrastre, el toque no abre el enlace
+      if (arrastrando) {
+        var bloquear = function (ev) { ev.preventDefault(); ev.stopPropagation(); };
+        cinta.addEventListener('click', bloquear, { capture: true, once: true });
+        setTimeout(function () { cinta.removeEventListener('click', bloquear, { capture: true }); arrastrando = false; }, 400);
+      }
+    }
+    ['pointerup', 'pointercancel'].forEach(function (ev) { cinta.addEventListener(ev, soltar); });
+    cinta.addEventListener('pointerleave', function (e) { if (!arrastrando) soltar(e); });
     window.addEventListener('blur', soltar);
 
     // Sin moverse cuando no está a la vista (ahorra batería)
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; }).observe(cinta);
-    }
-  }
-
-  // [MOV-3] Nieve cayendo sobre la montaña: puntos dibujados con código (sin imágenes), solo mientras
-  // la sección está a la vista. Con «reducir movimiento» no nieva.
-  var lienzo = !reduceMotion && document.querySelector('.escena__copos');
-  if (lienzo && lienzo.getContext) {
-    var ctx = lienzo.getContext('2d');
-    var copos = [];
-    var anchoL = 0, altoL = 0, nevando = false, ultimoC = 0;
-    var dpr = Math.min(2, window.devicePixelRatio || 1);
-    function medirLienzo() {
-      var r = lienzo.getBoundingClientRect();
-      anchoL = r.width; altoL = r.height;
-      lienzo.width = Math.round(anchoL * dpr); lienzo.height = Math.round(altoL * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var cuantos = Math.round(Math.min(110, anchoL * altoL / 6500));
-      copos = [];
-      for (var i = 0; i < cuantos; i++) {
-        copos.push({
-          x: Math.random() * anchoL, y: Math.random() * altoL,
-          r: 0.8 + Math.random() * 2.2,            // tamaño: los grandes parecen más cerca
-          v: 18 + Math.random() * 42,              // velocidad de caída (px/s)
-          fase: Math.random() * Math.PI * 2,
-          a: 0.35 + Math.random() * 0.55           // transparencia
-        });
-      }
-    }
-    function nevar(t) {
-      if (!nevando) return;
-      var dt = ultimoC ? Math.min(64, t - ultimoC) / 1000 : 0;
-      ultimoC = t;
-      ctx.clearRect(0, 0, anchoL, altoL);
-      ctx.fillStyle = '#fff';
-      for (var i = 0; i < copos.length; i++) {
-        var c = copos[i];
-        c.y += c.v * dt * (c.r / 2);
-        c.fase += dt * 0.9;
-        var x = c.x + Math.sin(c.fase) * 12 * (c.r / 3);   // vaivén suave a los lados
-        if (c.y - c.r > altoL) { c.y = -c.r; c.x = Math.random() * anchoL; }
-        ctx.globalAlpha = c.a;
-        ctx.beginPath(); ctx.arc(x, c.y, c.r, 0, Math.PI * 2); ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-      requestAnimationFrame(nevar);
-    }
-    medirLienzo();
-    // En el móvil la barra del navegador cambia el alto al bajar: solo se recalcula si cambia el ancho
-    window.addEventListener('resize', function () { if (Math.abs(lienzo.getBoundingClientRect().width - anchoL) > 1) medirLienzo(); });
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        var ver = entries[0].isIntersecting;
-        if (ver && !nevando) { nevando = true; ultimoC = 0; requestAnimationFrame(nevar); }
-        else if (!ver) nevando = false;
-      }).observe(lienzo);
     }
   }
 

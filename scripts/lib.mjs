@@ -64,6 +64,12 @@ export function fechaCorta(iso) {
   return `${DIAS[dia]} ${d} ${MESES[m - 1]}`;
 }
 
+/** «28 de noviembre» (sin el día de la semana) */
+export function fechaSinDia(iso) {
+  const { m, d } = partesFecha(iso);
+  return `${d} de ${MESES_LARGOS[m - 1]}`;
+}
+
 /** «sábado 28 de noviembre» */
 export function fechaLarga(iso) {
   const { m, d, dia } = partesFecha(iso);

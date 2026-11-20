@@ -53,18 +53,17 @@
     <!-- ========== 4. NIEVE · {{nombreCorto}} × TRANSVIA XPERIENCE (propuesta A: «La montaña») ========== -->
     <!-- Una sola escena a pantalla completa: montaña de fondo con profundidad, nieve cayendo y el texto encima.
          Las demás fotos y el vídeo de Nieve se ven en el reel. Transvia Xperience NO es una marca del grupo. -->
-    <section class="snow snow--escena" id="nieve" aria-labelledby="nieve-titulo">
+    <section class="snow snow--escena" id="nieve" aria-label="Nieve">
       <div class="escena__fondo" aria-hidden="true">
         <img src="/img/nieve-bengala.jpg" alt="" width="720" height="1279" loading="lazy">
       </div>
-      <canvas class="escena__copos" aria-hidden="true"></canvas>
       <div class="container escena__contenido">
         <header class="escena__cabecera">
-          <h2 class="snow__title madena" id="nieve-titulo">Nieve</h2>
-          <p class="snow__lockup">
-            <img src="/logos/logo-white.png" alt="{{nombre}}" width="800" height="248" loading="lazy">
+          <!-- Logos con nieve acumulada encima (imágenes estáticas, mismo tamaño las dos) -->
+          <p class="snow__lockup snow__lockup--nieve">
+            <span class="snow__logo"><img src="/logos/sobremesa-nieve.png" alt="{{nombre}}" width="900" height="318" loading="lazy"></span>
             <span class="snow__x" aria-hidden="true">×</span>
-            <img class="snow__partner-logo" src="/logos/transvia-blanco.png" alt="Transvia Xperience" width="600" height="200" loading="lazy">
+            <span class="snow__logo snow__logo--transvia"><img src="/logos/transvia-nieve.png" alt="Transvia Xperience" width="900" height="343" loading="lazy"></span>
           </p>
         </header>
         <div class="escena__pie reveal">

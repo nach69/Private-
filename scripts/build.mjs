@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, st
 import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  hoyEnMadrid, erroresEvento, eventosFuturos, visibleHasta, fechaCorta, fechaLarga, escapar, ordenarCarpetas
+  hoyEnMadrid, erroresEvento, eventosFuturos, visibleHasta, fechaCorta, fechaLarga, fechaSinDia, escapar, ordenarCarpetas
 } from './lib.mjs';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -88,7 +88,7 @@ function tarjetaCarrusel(ev, i) {
   return `<li class="evento" data-fecha="${visibleHasta(ev)}">
     <a class="evento__enlace" ${enlace} data-fourvenues="${escapar(url)}" aria-label="Entradas: ${escapar(marca.nombre)}, ${escapar(fechaLarga(ev.fecha))}">
       <span class="evento__flyer">${flyer}</span>
-      <span class="evento__fecha"><time datetime="${ev.fecha}"><span class="evento__fecha-corta">${escapar(fechaCorta(ev.fecha))}</span><span class="evento__fecha-larga">${escapar(fechaLarga(ev.fecha).replace(/^./, (c) => c.toUpperCase()))}</span></time></span>
+      <span class="evento__fecha"><time datetime="${ev.fecha}">${escapar(fechaSinDia(ev.fecha))}</time></span>
       <span class="evento__marca">${escapar(marca.nombre)}</span>
     </a>
   </li>`;
