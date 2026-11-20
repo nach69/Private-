@@ -67,8 +67,9 @@
   window.matchMedia('(min-width: 960px)').addEventListener('change', function (mq) { if (mq.matches) setMenu(false); });
 
   /* ---------- Aparición suave ---------- */
+  // Con «reducir movimiento» también se observa: en Nosotros se hace un fundido suave sin desplazamiento.
   var revealEls = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window && !reduceMotion) {
+  if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
@@ -77,6 +78,19 @@
     revealEls.forEach(function (el) { io.observe(el); });
   } else {
     revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  /* [MOV-4] Nosotros: en cuanto la sección asoma, aparecen sus elementos uno detrás de otro */
+  var nosotros = document.getElementById('nosotros');
+  if (nosotros && 'IntersectionObserver' in window) {
+    var ioNosotros = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      nosotros.classList.add('intro--visible');
+      ioNosotros.disconnect();
+    }, { rootMargin: '0px 0px -12% 0px', threshold: 0 });
+    ioNosotros.observe(nosotros);
+  } else if (nosotros) {
+    nosotros.classList.add('intro--visible');
   }
 
   /* ---------- Carrusel de flyers: flechas en ordenador ---------- */
@@ -90,91 +104,113 @@
   });
 
   /* =========================================================
-     MOVIMIENTO (prueba 20/11). Todo mueve solo posición, tamaño y opacidad (60 fps en móvil).
-     Con «reducir movimiento» no se ejecuta nada de esto y la página se ve quieta.
-     Cada bloque se puede borrar por separado si no gusta.
+     MOVIMIENTO. Todo mueve solo posición, tamaño y opacidad (60 fps en móvil).
+     Cada bloque [MOV-n] se puede borrar por separado si no gusta.
      ========================================================= */
-  if (!reduceMotion) {
-    var vh = window.innerHeight || document.documentElement.clientHeight;
-    window.addEventListener('resize', function () { vh = window.innerHeight || document.documentElement.clientHeight; pedirFrame(); });
-    var limitar = function (v) { return v < 0 ? 0 : (v > 1 ? 1 : v); };
-    // Progreso de un elemento al cruzar la pantalla: 0 cuando asoma por abajo, 1 cuando llega a «hasta» (fracción de pantalla).
-    var progreso = function (r, hasta) { return limitar((vh - r.top) / (vh * (1 - hasta))); };
+  var vh = window.innerHeight || document.documentElement.clientHeight;
+  var limitar = function (v) { return v < 0 ? 0 : (v > 1 ? 1 : v); };
+  // Progreso de un elemento al cruzar la pantalla: 0 cuando asoma por abajo, 1 cuando llega a «hasta» (fracción de pantalla).
+  var progreso = function (r, hasta) { return limitar((vh - r.top) / (vh * (1 - hasta))); };
 
-    // [MOV-1] Portada: al bajar, las dos mitades del titular se separan, el logo se encoge y el vídeo va más lento y se oscurece
-    var portadaMov = document.querySelector('.portada');
+  // [MOV-1] Portada: el titular empieza oculto y aparece al empezar a bajar (--t). Sin «reducir movimiento»,
+  // además el logo se encoge y el vídeo va más lento y se oscurece (--p).
+  var portadaMov = document.querySelector('.portada');
+  if (portadaMov) document.documentElement.classList.add('mov-portada');
 
-    // [MOV-3] Nieve: el título se rellena, los logos se juntan, las fotos se mueven a distinto ritmo
-    var nieveTitulo = document.querySelector('.snow__title');
-    var nieveLockup = document.querySelector('.snow__lockup');
-    var nieveVideo = document.querySelector('.snow__video');
-    var nieveFoto = document.querySelector('.snow__foto-movil');
-    if (nieveTitulo) document.documentElement.classList.add('mov-nieve');
+  // [MOV-3] Nieve: el título se rellena, los logos se juntan, las fotos se mueven a distinto ritmo
+  var nieveTitulo = !reduceMotion && document.querySelector('.snow__title');
+  var nieveLockup = !reduceMotion && document.querySelector('.snow__lockup');
+  var nieveVideo = !reduceMotion && document.querySelector('.snow__video');
+  var nieveFoto = !reduceMotion && document.querySelector('.snow__foto-movil');
+  if (nieveTitulo) document.documentElement.classList.add('mov-nieve');
 
-    var pendiente = false;
-    function pedirFrame() { if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); } }
-    function actualizar() {
-      pendiente = false;
-      // Primero se leen todas las medidas y después se escribe (evita recalcular la página varias veces)
-      var rp = portadaMov && portadaMov.getBoundingClientRect();
-      var rt = nieveTitulo && nieveTitulo.getBoundingClientRect();
-      var rl = nieveLockup && nieveLockup.getBoundingClientRect();
-      var rv = nieveVideo && nieveVideo.getBoundingClientRect();
-      var rf = nieveFoto && nieveFoto.getBoundingClientRect();
+  var pendiente = false;
+  function pedirFrame() { if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); } }
+  function actualizar() {
+    pendiente = false;
+    // Primero se leen todas las medidas y después se escribe (evita recalcular la página varias veces)
+    var rp = portadaMov && portadaMov.getBoundingClientRect();
+    var rt = nieveTitulo && nieveTitulo.getBoundingClientRect();
+    var rl = nieveLockup && nieveLockup.getBoundingClientRect();
+    var rv = nieveVideo && nieveVideo.getBoundingClientRect();
+    var rf = nieveFoto && nieveFoto.getBoundingClientRect();
 
-      if (rp && rp.bottom > 0) portadaMov.style.setProperty('--p', limitar(-rp.top / rp.height).toFixed(3));
-      if (rt && rt.top < vh && rt.bottom > 0) nieveTitulo.style.setProperty('--relleno', (progreso(rt, 0.35) * 100).toFixed(1) + '%');
-      if (rl && rl.top < vh && rl.bottom > 0) nieveLockup.style.setProperty('--q', progreso(rl, 0.3).toFixed(3));
-      if (rv && rv.top < vh && rv.bottom > 0) nieveVideo.style.setProperty('--pv', ((rv.top + rv.height / 2) / vh - 0.5).toFixed(3));
-      if (rf && rf.top < vh && rf.bottom > 0) nieveFoto.style.setProperty('--pf', limitar((vh - rf.top) / (vh + rf.height)).toFixed(3));
+    if (rp && rp.bottom > 0) {
+      // El titular termina de aparecer cuando se ha bajado un 15 % de la portada (aún se ve entero)
+      portadaMov.style.setProperty('--t', limitar(-rp.top / (rp.height * 0.15)).toFixed(3));
+      if (!reduceMotion) portadaMov.style.setProperty('--p', limitar(-rp.top / rp.height).toFixed(3));
     }
-    window.addEventListener('scroll', pedirFrame, { passive: true });
-    pedirFrame();
+    if (rt && rt.top < vh && rt.bottom > 0) nieveTitulo.style.setProperty('--relleno', (progreso(rt, 0.35) * 100).toFixed(1) + '%');
+    if (rl && rl.top < vh && rl.bottom > 0) nieveLockup.style.setProperty('--q', progreso(rl, 0.3).toFixed(3));
+    if (rv && rv.top < vh && rv.bottom > 0) nieveVideo.style.setProperty('--pv', ((rv.top + rv.height / 2) / vh - 0.5).toFixed(3));
+    if (rf && rf.top < vh && rf.bottom > 0) nieveFoto.style.setProperty('--pf', limitar((vh - rf.top) / (vh + rf.height)).toFixed(3));
+  }
+  window.addEventListener('scroll', pedirFrame, { passive: true });
+  window.addEventListener('resize', function () { vh = window.innerHeight || document.documentElement.clientHeight; pedirFrame(); });
+  pedirFrame();
 
-    // [MOV-2] Carrusel: el flyer del centro se ve entero y los laterales más pequeños; la imagen de dentro se desplaza al deslizar
-    var carruselMov = document.querySelector('[data-carrusel-scroll]');
-    if (carruselMov) {
-      carruselMov.classList.add('carrusel--foco');
-      var pendienteC = false;
-      var enfocar = function () {
-        pendienteC = false;
-        var rc = carruselMov.getBoundingClientRect();
-        var centro = rc.left + rc.width / 2;
-        var tarjetas = carruselMov.querySelectorAll('.evento');
-        var medidas = [];
-        tarjetas.forEach(function (t) { medidas.push(t.getBoundingClientRect()); });
-        tarjetas.forEach(function (t, i) {
-          var m = medidas[i];
-          var dx = ((m.left + m.width / 2) - centro) / m.width; // 0 en el centro, ±1 una tarjeta al lado
-          var d = Math.min(1, Math.abs(dx));
-          t.style.setProperty('--d', d.toFixed(3));
-          t.style.setProperty('--dx', Math.max(-1, Math.min(1, dx)).toFixed(3));
-        });
-      };
-      carruselMov.addEventListener('scroll', function () { if (!pendienteC) { pendienteC = true; requestAnimationFrame(enfocar); } }, { passive: true });
-      window.addEventListener('resize', enfocar);
-      enfocar();
+  // [MOV-2] Próximos eventos: cinta continua que no para de moverse. Al mantener pulsado un flyer,
+  // la cinta se detiene y ese flyer se agranda; al soltar, sigue. Con «reducir movimiento» queda el carrusel normal.
+  var cinta = !reduceMotion && document.querySelector('[data-carrusel-scroll]');
+  if (cinta && cinta.children.length) {
+    var originales = Array.prototype.slice.call(cinta.children);
+    // Copias para que la cinta no tenga final (solo decorativas: no se leen ni se puede llegar con el tabulador)
+    var copiar = function () {
+      originales.forEach(function (li) {
+        var copia = li.cloneNode(true);
+        copia.setAttribute('aria-hidden', 'true');
+        copia.removeAttribute('data-fecha');
+        copia.classList.add('evento--copia');
+        copia.querySelectorAll('a, button').forEach(function (a) { a.setAttribute('tabindex', '-1'); });
+        cinta.appendChild(copia);
+      });
+    };
+    copiar();
+    var anchoTanda = function () { return cinta.children[originales.length].offsetLeft - originales[0].offsetLeft; };
+    // Hacen falta copias suficientes para cubrir la pantalla mientras se desplaza una tanda entera
+    var vueltas = 0;
+    while (cinta.scrollWidth < cinta.clientWidth + anchoTanda() * 2 && vueltas++ < 6) copiar();
+    cinta.classList.add('carrusel--cinta');
+    var seccionCinta = cinta.closest('section');
+    if (seccionCinta) seccionCinta.classList.add('proximos--cinta');
 
-      // Pequeño empujón la primera vez que aparece, para que se entienda que se desliza
-      if ('IntersectionObserver' in window && carruselMov.scrollWidth > carruselMov.clientWidth + 10) {
-        var ioEmpujon = new IntersectionObserver(function (entries) {
-          if (!entries[0].isIntersecting) return;
-          ioEmpujon.disconnect();
-          var tocado = false;
-          carruselMov.addEventListener('pointerdown', function () { tocado = true; }, { once: true, passive: true });
-          setTimeout(function () {
-            if (tocado) return;
-            var inicioX = carruselMov.scrollLeft;
-            carruselMov.classList.add('carrusel--scroll'); // sin «imán» mientras dura el empujón
-            carruselMov.scrollTo({ left: inicioX + 70, behavior: 'smooth' });
-            setTimeout(function () {
-              if (!tocado) carruselMov.scrollTo({ left: inicioX, behavior: 'smooth' });
-              setTimeout(function () { carruselMov.classList.remove('carrusel--scroll'); }, 700);
-            }, 650);
-          }, 400);
-        }, { threshold: 0.6 });
-        ioEmpujon.observe(carruselMov);
+    var x = 0;
+    var velocidad = 32; // píxeles por segundo
+    var parado = false;
+    var visible = true;
+    var ultimo = 0;
+    function avanzar(t) {
+      if (ultimo && !parado && visible) {
+        var dt = Math.min(64, t - ultimo) / 1000;
+        x -= velocidad * dt;
+        var tanda = anchoTanda();
+        if (tanda > 0 && -x >= tanda) x += tanda;
+        cinta.style.setProperty('--x', x.toFixed(2) + 'px');
       }
+      ultimo = t;
+      requestAnimationFrame(avanzar);
+    }
+    requestAnimationFrame(avanzar);
+
+    // Mantener pulsado: para la cinta y destaca el flyer
+    var activo = null;
+    function soltar() {
+      parado = false;
+      if (activo) { activo.classList.remove('is-activo'); activo = null; }
+    }
+    cinta.addEventListener('pointerdown', function (e) {
+      var li = e.target.closest('.evento');
+      if (!li) return;
+      parado = true;
+      activo = li;
+      li.classList.add('is-activo');
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) { cinta.addEventListener(ev, soltar); });
+    window.addEventListener('blur', soltar);
+
+    // Sin moverse cuando no está a la vista (ahorra batería)
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; }).observe(cinta);
     }
   }
 
