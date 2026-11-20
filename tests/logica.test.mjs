@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { hoyEnMadrid, eventosFuturos, erroresEvento, fechaCorta, fechaLarga, ordenarCarpetas } from '../scripts/lib.mjs';
+import { hoyEnMadrid, eventosFuturos, visibleHasta, erroresEvento, fechaCorta, fechaLarga, ordenarCarpetas } from '../scripts/lib.mjs';
 import { revisarEnvio, componerCorreo, TEXTO_CONSENTIMIENTO_NEWSLETTER } from '../lib/formulario.mjs';
 
 test('hoy en Madrid cambia a medianoche de Valencia, no de UTC', () => {
@@ -83,4 +83,21 @@ test('el texto de consentimiento guardado coincide con el de la web', () => {
 test('el asunto no admite saltos de línea (inyección de cabeceras)', () => {
   const r = revisarEnvio({ ...base, nombre: 'Ana\r\nBcc: x@y.z' }, AHORA);
   assert.ok(!componerCorreo(r).asunto.includes('\n'));
+});
+
+test('eventos que acaban o empiezan de madrugada siguen visibles al día siguiente', () => {
+  assert.equal(visibleHasta({ fecha: '2026-11-28', hora: '20:00', horaFin: '03:30' }), '2026-11-29');
+  assert.equal(visibleHasta({ fecha: '2026-12-31', hora: '00:30', horaFin: '05:30' }), '2027-01-01');
+  assert.equal(visibleHasta({ fecha: '2026-12-22', hora: '18:00', horaFin: '23:00' }), '2026-12-22');
+  assert.equal(visibleHasta({ fecha: '2026-12-22', hora: null }), '2026-12-22');
+});
+
+test('galería: la última fila queda completa con 2, 3 y 4 columnas', () => {
+  const html = readFileSync(new URL('../dist/vosotros/index.html', import.meta.url), 'utf8');
+  const items = [...html.matchAll(/<li( class="([^"]*)")?><a[^>]*instagram/g)].map((m) => m[2] || '');
+  assert.ok(items.length > 0);
+  for (const cols of [2, 3, 4]) {
+    const huecos = items.reduce((n, c) => n + (c.includes(`ancha-${cols}`) ? 2 : 1), 0);
+    assert.equal(huecos % cols, 0, `con ${cols} columnas sobran huecos`);
+  }
 });

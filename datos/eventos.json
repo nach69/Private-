@@ -3,9 +3,10 @@
     "marca": "basto",
     "titulo": "Basto by Sobremesa",
     "fecha": "2026-11-28",
-    "hora": null,
-    "lugar": null,
-    "flyer": null,
+    "hora": "20:00",
+    "horaFin": "03:30",
+    "lugar": "Veles e Vents, La Marina de València",
+    "flyer": "2026-11-28-basto.jpg",
     "entradas": "https://www.fourvenues.com/veleta/events/basto-by-sobremesa-28-11-2026-JB7W"
   },
   {
@@ -14,8 +15,18 @@
     "fecha": "2026-12-22",
     "hora": null,
     "lugar": null,
-    "flyer": null,
+    "flyer": "2026-12-22-solea.jpg",
     "entradas": null,
     "censurado": true
+  },
+  {
+    "marca": "tutto-passa",
+    "titulo": "Nochevieja Milwaukee",
+    "fecha": "2026-12-31",
+    "hora": "00:30",
+    "horaFin": "05:30",
+    "lugar": "Milwaukee, Carrer Bearn 32, Pas de la Casa (Andorra)",
+    "flyer": "2026-12-31-tutto-passa.jpg",
+    "entradas": null
   }
 ]

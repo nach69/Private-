@@ -17,6 +17,7 @@ No tiene base de datos ni panel: todo lo que cambia (eventos, marcas, fotos) est
      "titulo": "Feria Veleta",
      "fecha": "2027-03-14",
      "hora": "18:00",
+     "horaFin": "23:00",
      "lugar": "Veles e Vents, Valencia",
      "flyer": "2027-03-14-veleta.jpg",
      "entradas": "https://enlace-de-las-entradas"
@@ -25,11 +26,11 @@ No tiene base de datos ni panel: todo lo que cambia (eventos, marcas, fotos) est
 
    - **marca**: una de estas, en minúsculas: `veleta`, `solea`, `tutto-passa`, `basto`, `yolo`.
    - **fecha**: siempre año-mes-día (`2027-03-14`).
-   - **hora**: con dos puntos (`18:00`).
+   - **hora** y **horaFin**: con dos puntos (`18:00`). `horaFin` es opcional. Si el evento acaba de madrugada (por ejemplo `20:00` a `03:30`) o empieza de madrugada (`00:30`, como una Nochevieja), sigue saliendo en la web hasta el día siguiente.
    - Si todavía no sabes un dato, pon `null` (sin comillas): en la web saldrá como «PENDIENTE».
    - Si aún no hay enlace de entradas, pon `"entradas": null` y saldrá «Entradas pronto».
    - Para un evento que todavía es secreto, añade `"censurado": true`: salen la marca y la fecha, y el resto tapado.
-3. Sube el flyer a la carpeta **`flyers/`** (botón *Add file → Upload files*) con el mismo nombre que has puesto en `"flyer"`. Mejor en vertical (4:5) y de menos de 500 KB.
+3. Sube el flyer a la carpeta **`flyers/`** (botón *Add file → Upload files*) con el mismo nombre que has puesto en `"flyer"`. En vertical, formato historia de Instagram (9:16), y de menos de 500 KB.
 4. Pulsa **Commit changes**. En un par de minutos está publicado.
 
 No hace falta borrar los eventos pasados: la web los esconde sola al día siguiente. Si no queda ninguno, el bloque de «Próximos eventos» desaparece en vez de quedarse vacío.

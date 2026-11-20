@@ -885,3 +885,35 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 .hueco--logo { display: inline-grid; height: 34px; padding: 0 10px; }
 .portada__aviso { margin-top: 18px; }
 .marquee__aviso { background: var(--black); text-align: center; padding: 0 0 12px; }
+
+/* ---------- Flyers en vertical (formato historia, 9:16) ---------- */
+.evento__flyer, .evento-ficha__flyer { aspect-ratio: 9 / 16; }
+.carrusel { grid-auto-columns: 62%; }
+@media (min-width: 640px) { .carrusel { grid-auto-columns: 36%; } }
+@media (min-width: 960px) { .carrusel { grid-auto-columns: calc((min(100vw, var(--max)) - 2 * var(--gutter) - 3 * 18px) / 4); } }
+.evento-ficha__flyer { max-width: 380px; }
+
+/* ---------- Nosotros con foto ---------- */
+.intro { text-align: left; padding: clamp(56px, 10vw, 120px) 0; }
+.intro__grid { display: grid; gap: 28px; align-items: center; }
+.intro__text { margin: 0 0 14px; max-width: 46ch; }
+.intro__foto { overflow: hidden; background: var(--grey-1); aspect-ratio: 594 / 318; }
+.intro__foto img { width: 100%; height: 100%; object-fit: cover; }
+@media (min-width: 768px) { .intro__grid { grid-template-columns: 1fr 1fr; gap: 56px; } }
+
+/* ---------- Galería: la última fila siempre completa ---------- */
+.galeria { grid-auto-flow: dense; }
+.galeria li.ancha-2 { grid-column: span 2; }
+.galeria li.ancha-2 a, .galeria li.ancha-2 > div { aspect-ratio: 2 / 1; }
+@media (min-width: 640px) {
+  .galeria li.ancha-2 { grid-column: auto; }
+  .galeria li.ancha-2 a, .galeria li.ancha-2 > div { aspect-ratio: 1 / 1; }
+  .galeria li.ancha-3 { grid-column: span 2; }
+  .galeria li.ancha-3 a, .galeria li.ancha-3 > div { aspect-ratio: 2 / 1; }
+}
+@media (min-width: 960px) {
+  .galeria li.ancha-3 { grid-column: auto; }
+  .galeria li.ancha-3 a, .galeria li.ancha-3 > div { aspect-ratio: 1 / 1; }
+  .galeria li.ancha-4 { grid-column: span 2; }
+  .galeria li.ancha-4 a, .galeria li.ancha-4 > div { aspect-ratio: 2 / 1; }
+}

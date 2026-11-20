@@ -17,15 +17,33 @@ export function erroresEvento(ev, idsMarcas) {
   if (!ev || typeof ev !== 'object') return ['no es un evento'];
   if (!idsMarcas.includes(ev.marca)) errores.push(`marca desconocida «${ev.marca}» (usa una de: ${idsMarcas.join(', ')})`);
   if (!FECHA_RE.test(ev.fecha || '') || Number.isNaN(Date.parse(ev.fecha))) errores.push(`fecha «${ev.fecha}» no válida (formato AAAA-MM-DD)`);
-  if (ev.hora && !/^\d{1,2}:\d{2}$/.test(ev.hora)) errores.push(`hora «${ev.hora}» no válida (formato 18:00)`);
+  if (ev.hora && !/^\d{2}:\d{2}$/.test(ev.hora)) errores.push(`hora «${ev.hora}» no válida (formato 18:00)`);
+  if (ev.horaFin && !/^\d{2}:\d{2}$/.test(ev.horaFin)) errores.push(`horaFin «${ev.horaFin}» no válida (formato 03:30)`);
   if (ev.entradas && !/^https:\/\//.test(ev.entradas)) errores.push('el enlace de entradas debe empezar por https://');
   return errores;
 }
 
-/** Eventos de hoy en adelante, ordenados por fecha y hora. Un evento sigue visible todo su día. */
+/** Día siguiente a una fecha AAAA-MM-DD. */
+function diaSiguiente(iso) {
+  const d = new Date(iso + 'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
+/**
+ * Último día en que el evento se muestra. Normalmente su propio día; si acaba de madrugada
+ * (horaFin menor que hora) o empieza de madrugada (antes de las 06:00, como una Nochevieja
+ * a las 00:30), sigue visible también el día siguiente.
+ */
+export function visibleHasta(ev) {
+  const cruzaMedianoche = (ev.hora && ev.horaFin && ev.horaFin < ev.hora) || (ev.hora && ev.hora < '06:00');
+  return cruzaMedianoche ? diaSiguiente(ev.fecha) : ev.fecha;
+}
+
+/** Eventos que aún no han terminado, ordenados por fecha y hora. */
 export function eventosFuturos(eventos, hoy) {
   return eventos
-    .filter((ev) => ev.fecha >= hoy)
+    .filter((ev) => visibleHasta(ev) >= hoy)
     .sort((a, b) => (a.fecha + (a.hora || '')).localeCompare(b.fecha + (b.hora || '')));
 }
 

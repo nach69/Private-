@@ -72,8 +72,14 @@ const ok = (cond, texto) => { console.log((cond ? 'OK   ' : 'FALLA') + ' ' + tex
   const p2 = await ctx2.newPage();
   await p2.clock.setFixedTime(new Date('2026-11-29T10:00:00+01:00'));
   await p2.goto(BASE + '/eventos/');
-  ok(await p2.$$eval('[data-fecha]', (e) => e.map((x) => x.dataset.fecha).join()) === '2026-12-22', 'el 29/11 ya no sale el evento del 28/11');
-  await p2.clock.setFixedTime(new Date('2026-12-23T10:00:00+01:00'));
+  ok((await p2.$$('.evento-ficha')).length === 3, 'el 29/11 aún sale el del 28 (acaba a las 03:30)');
+  await p2.clock.setFixedTime(new Date('2026-11-30T10:00:00+01:00'));
+  await p2.goto(BASE + '/eventos/');
+  ok((await p2.$$('.evento-ficha')).length === 2, 'el 30/11 ya no sale el del 28/11');
+  await p2.clock.setFixedTime(new Date('2027-01-01T03:00:00+01:00'));
+  await p2.goto(BASE + '/eventos/');
+  ok((await p2.$$('.evento-ficha')).length === 1, 'la madrugada del 1/1 sigue saliendo la Nochevieja');
+  await p2.clock.setFixedTime(new Date('2027-01-02T10:00:00+01:00'));
   await p2.goto(BASE + '/');
   ok(await p2.isHidden('#proximos'), 'sin eventos futuros, la home oculta el bloque entero');
   await p2.goto(BASE + '/eventos/');

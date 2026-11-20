@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync, readdirSync, st
 import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  hoyEnMadrid, erroresEvento, eventosFuturos, fechaCorta, fechaLarga, escapar, ordenarCarpetas
+  hoyEnMadrid, erroresEvento, eventosFuturos, visibleHasta, fechaCorta, fechaLarga, escapar, ordenarCarpetas
 } from './lib.mjs';
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -57,7 +57,7 @@ const futuros = eventosFuturos(eventos, hoy);
 function flyerEvento(ev, marca, perezosa) {
   if (ev.flyer) {
     const alt = ev.censurado ? `Flyer del próximo evento de ${marca.nombre}` : `Flyer de ${ev.titulo || marca.nombre}`;
-    return `<img src="/flyers/${escapar(ev.flyer)}" alt="${escapar(alt)}" width="800" height="1000"${perezosa ? ' loading="lazy"' : ''}>`;
+    return `<img src="/flyers/${escapar(ev.flyer)}" alt="${escapar(alt)}" width="720" height="1280"${perezosa ? ' loading="lazy"' : ''}>`;
   }
   // Sin flyer todavía: cartel provisional con la marca y la fecha.
   return `<div class="flyer-provisional${ev.censurado ? ' flyer-provisional--censurado' : ''}" role="img" aria-label="${escapar(marca.nombre)}, ${escapar(fechaLarga(ev.fecha))}">
@@ -84,7 +84,7 @@ function tarjetaCarrusel(ev, i) {
   const destino = ev.entradas
     ? `<a class="evento__flyer" href="${escapar(ev.entradas)}" target="_blank" rel="noopener" aria-label="Entradas: ${escapar(marca.nombre)}, ${escapar(fechaLarga(ev.fecha))}">${flyer}</a>`
     : `<a class="evento__flyer" href="/eventos/">${flyer}</a>`;
-  return `<li class="evento" data-fecha="${ev.fecha}">
+  return `<li class="evento" data-fecha="${visibleHasta(ev)}">
     ${destino}
     <p class="evento__fecha"><time datetime="${ev.fecha}">${escapar(fechaCorta(ev.fecha))}</time></p>
     <p class="evento__marca">${escapar(marca.nombre)}</p>
@@ -94,8 +94,10 @@ function tarjetaCarrusel(ev, i) {
 function tarjetaLista(ev, i) {
   const marca = marcaPorId[ev.marca];
   const sitio = ev.lugar ? escapar(ev.lugar) : (ev.censurado ? 'Por desvelar' : pendiente('lugar'));
-  const hora = ev.hora ? escapar(ev.hora) + ' h' : (ev.censurado ? 'Por desvelar' : pendiente('hora'));
-  return `<li class="evento-ficha" data-fecha="${ev.fecha}">
+  const hora = ev.hora
+    ? escapar(ev.hora) + (ev.horaFin ? '–' + escapar(ev.horaFin) : '') + ' h'
+    : (ev.censurado ? 'Por desvelar' : pendiente('hora'));
+  return `<li class="evento-ficha" data-fecha="${visibleHasta(ev)}">
     <div class="evento-ficha__flyer">${flyerEvento(ev, marca, i > 1)}</div>
     <div class="evento-ficha__datos">
       <p class="meta-label">${escapar(marca.nombre)}</p>
@@ -162,14 +164,22 @@ function fotosGaleria() {
   return fotos;
 }
 
+// Para que la última fila de la galería nunca quede a medias: con 2, 3 o 4 columnas,
+// las primeras fotos que hagan falta ocupan dos huecos (clases ancha-2, ancha-3, ancha-4).
+function clasesAnchas(i, total) {
+  return [2, 3, 4].filter((cols) => i < (cols - (total % cols)) % cols).map((cols) => `ancha-${cols}`);
+}
+
 function galeriaHTML(fotos) {
   if (!fotos.length) return '<p class="galeria__vacia">Pronto subiremos las primeras fotos.</p>';
-  return '<ul class="galeria" role="list">' + fotos.map((f) => {
+  return '<ul class="galeria" role="list">' + fotos.map((f, i) => {
+    const clases = clasesAnchas(i, fotos.length);
     const img = `<img src="${f.src}" alt="${escapar(f.alt)}" loading="lazy">`;
     const pie = `<span class="galeria__marca">${escapar(f.marca.nombre)}</span>`;
+    const li = clases.length ? `<li class="${clases.join(' ')}">` : '<li>';
     return f.marca.instagram
-      ? `<li><a href="${escapar(f.marca.instagram)}" target="_blank" rel="noopener" aria-label="${escapar(f.alt)}. Ver ${escapar(f.marca.nombre)} en Instagram">${img}${pie}</a></li>`
-      : `<li><div>${img}${pie}</div></li>`;
+      ? `${li}<a href="${escapar(f.marca.instagram)}" target="_blank" rel="noopener" aria-label="${escapar(f.alt)}. Ver ${escapar(f.marca.nombre)} en Instagram">${img}${pie}</a></li>`
+      : `${li}<div>${img}${pie}</div></li>`;
   }).join('\n') + '</ul>';
 }
 
