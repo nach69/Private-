@@ -89,41 +89,93 @@
     });
   });
 
-  /* ---------- Carrusel ligado al scroll: al bajar por la página, los flyers avanzan despacio ----------
-     Se puede seguir deslizando con el dedo; mientras la persona lo mueve, el scroll no lo empuja.
-     Con «reducir movimiento» no se mueve solo. */
-  var carruselScroll = document.querySelector('[data-carrusel-scroll]');
-  if (carruselScroll && !reduceMotion) {
-    var bloque = carruselScroll.closest('section') || carruselScroll;
-    var actual = carruselScroll.scrollLeft;
-    var manualHasta = 0;
-    var animando = false;
-    carruselScroll.classList.add('carrusel--scroll');
-    ['pointerdown', 'touchstart', 'wheel'].forEach(function (ev) {
-      carruselScroll.addEventListener(ev, function () { manualHasta = Date.now() + 1500; }, { passive: true });
-    });
-    function objetivo() {
-      var r = bloque.getBoundingClientRect();
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-      var p = (vh - r.top) / (vh + r.height);
-      p = Math.max(0, Math.min(1, p));
-      return p * Math.max(0, carruselScroll.scrollWidth - carruselScroll.clientWidth);
+  /* =========================================================
+     MOVIMIENTO (prueba 20/11). Todo mueve solo posición, tamaño y opacidad (60 fps en móvil).
+     Con «reducir movimiento» no se ejecuta nada de esto y la página se ve quieta.
+     Cada bloque se puede borrar por separado si no gusta.
+     ========================================================= */
+  if (!reduceMotion) {
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    window.addEventListener('resize', function () { vh = window.innerHeight || document.documentElement.clientHeight; pedirFrame(); });
+    var limitar = function (v) { return v < 0 ? 0 : (v > 1 ? 1 : v); };
+    // Progreso de un elemento al cruzar la pantalla: 0 cuando asoma por abajo, 1 cuando llega a «hasta» (fracción de pantalla).
+    var progreso = function (r, hasta) { return limitar((vh - r.top) / (vh * (1 - hasta))); };
+
+    // [MOV-1] Portada: al bajar, las dos mitades del titular se separan, el logo se encoge y el vídeo va más lento y se oscurece
+    var portadaMov = document.querySelector('.portada');
+
+    // [MOV-3] Nieve: el título se rellena, los logos se juntan, las fotos se mueven a distinto ritmo
+    var nieveTitulo = document.querySelector('.snow__title');
+    var nieveLockup = document.querySelector('.snow__lockup');
+    var nieveVideo = document.querySelector('.snow__video');
+    var nieveFoto = document.querySelector('.snow__foto-movil');
+    if (nieveTitulo) document.documentElement.classList.add('mov-nieve');
+
+    var pendiente = false;
+    function pedirFrame() { if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); } }
+    function actualizar() {
+      pendiente = false;
+      // Primero se leen todas las medidas y después se escribe (evita recalcular la página varias veces)
+      var rp = portadaMov && portadaMov.getBoundingClientRect();
+      var rt = nieveTitulo && nieveTitulo.getBoundingClientRect();
+      var rl = nieveLockup && nieveLockup.getBoundingClientRect();
+      var rv = nieveVideo && nieveVideo.getBoundingClientRect();
+      var rf = nieveFoto && nieveFoto.getBoundingClientRect();
+
+      if (rp && rp.bottom > 0) portadaMov.style.setProperty('--p', limitar(-rp.top / rp.height).toFixed(3));
+      if (rt && rt.top < vh && rt.bottom > 0) nieveTitulo.style.setProperty('--relleno', (progreso(rt, 0.35) * 100).toFixed(1) + '%');
+      if (rl && rl.top < vh && rl.bottom > 0) nieveLockup.style.setProperty('--q', progreso(rl, 0.3).toFixed(3));
+      if (rv && rv.top < vh && rv.bottom > 0) nieveVideo.style.setProperty('--pv', ((rv.top + rv.height / 2) / vh - 0.5).toFixed(3));
+      if (rf && rf.top < vh && rf.bottom > 0) nieveFoto.style.setProperty('--pf', limitar((vh - rf.top) / (vh + rf.height)).toFixed(3));
     }
-    function paso() {
-      if (Date.now() < manualHasta) { actual = carruselScroll.scrollLeft; animando = false; return; }
-      var meta = objetivo();
-      actual += (meta - actual) * 0.08;
-      if (Math.abs(meta - actual) < 0.5) { actual = meta; animando = false; }
-      carruselScroll.scrollLeft = actual;
-      if (animando) requestAnimationFrame(paso);
+    window.addEventListener('scroll', pedirFrame, { passive: true });
+    pedirFrame();
+
+    // [MOV-2] Carrusel: el flyer del centro se ve entero y los laterales más pequeños; la imagen de dentro se desplaza al deslizar
+    var carruselMov = document.querySelector('[data-carrusel-scroll]');
+    if (carruselMov) {
+      carruselMov.classList.add('carrusel--foco');
+      var pendienteC = false;
+      var enfocar = function () {
+        pendienteC = false;
+        var rc = carruselMov.getBoundingClientRect();
+        var centro = rc.left + rc.width / 2;
+        var tarjetas = carruselMov.querySelectorAll('.evento');
+        var medidas = [];
+        tarjetas.forEach(function (t) { medidas.push(t.getBoundingClientRect()); });
+        tarjetas.forEach(function (t, i) {
+          var m = medidas[i];
+          var dx = ((m.left + m.width / 2) - centro) / m.width; // 0 en el centro, ±1 una tarjeta al lado
+          var d = Math.min(1, Math.abs(dx));
+          t.style.setProperty('--d', d.toFixed(3));
+          t.style.setProperty('--dx', Math.max(-1, Math.min(1, dx)).toFixed(3));
+        });
+      };
+      carruselMov.addEventListener('scroll', function () { if (!pendienteC) { pendienteC = true; requestAnimationFrame(enfocar); } }, { passive: true });
+      window.addEventListener('resize', enfocar);
+      enfocar();
+
+      // Pequeño empujón la primera vez que aparece, para que se entienda que se desliza
+      if ('IntersectionObserver' in window && carruselMov.scrollWidth > carruselMov.clientWidth + 10) {
+        var ioEmpujon = new IntersectionObserver(function (entries) {
+          if (!entries[0].isIntersecting) return;
+          ioEmpujon.disconnect();
+          var tocado = false;
+          carruselMov.addEventListener('pointerdown', function () { tocado = true; }, { once: true, passive: true });
+          setTimeout(function () {
+            if (tocado) return;
+            var inicioX = carruselMov.scrollLeft;
+            carruselMov.classList.add('carrusel--scroll'); // sin «imán» mientras dura el empujón
+            carruselMov.scrollTo({ left: inicioX + 70, behavior: 'smooth' });
+            setTimeout(function () {
+              if (!tocado) carruselMov.scrollTo({ left: inicioX, behavior: 'smooth' });
+              setTimeout(function () { carruselMov.classList.remove('carrusel--scroll'); }, 700);
+            }, 650);
+          }, 400);
+        }, { threshold: 0.6 });
+        ioEmpujon.observe(carruselMov);
+      }
     }
-    function alHacerScroll() {
-      if (Date.now() < manualHasta) { actual = carruselScroll.scrollLeft; return; }
-      if (!animando) { animando = true; requestAnimationFrame(paso); }
-    }
-    window.addEventListener('scroll', alHacerScroll, { passive: true });
-    window.addEventListener('resize', alHacerScroll);
-    alHacerScroll();
   }
 
   /* Tarjetas aún sin enlace de entradas (href="#"): no saltan arriba de la página */
@@ -169,7 +221,8 @@
     };
     var ioCifras = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) { contar(entry.target); ioCifras.unobserve(entry.target); }
+        // Empieza justo cuando termina de aparecer la cifra
+        if (entry.isIntersecting) { var el = entry.target; setTimeout(function () { contar(el); }, 250); ioCifras.unobserve(el); }
       });
     }, { threshold: 0, rootMargin: '0px 0px -15% 0px' });
     cifras.forEach(function (el) {

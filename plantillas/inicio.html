@@ -7,9 +7,14 @@
         </picture>
         {{{portadaVideo}}}
       </div>
+      <div class="portada__sombra" aria-hidden="true"></div>
       <div class="portada__contenido">
-        <img class="portada__logo" src="/logos/logo-hero.png" alt="{{nombre}}" width="1600" height="496" fetchpriority="high">
-        <h1 class="portada__titulo madena" id="portada-titulo">La sobremesa empieza cuando el plan debería acabar.</h1>
+        <!-- Titular partido: la primera mitad sobre el logo y la segunda debajo -->
+        <h1 class="portada__titulo" id="portada-titulo">
+          <span class="portada__linea portada__linea--arriba"><span class="portada__texto">La sobremesa empieza</span></span>
+          <img class="portada__logo" src="/logos/logo-hero.png" alt="" width="1600" height="496" fetchpriority="high">
+          <span class="portada__linea portada__linea--abajo"><span class="portada__texto">cuando el plan debería acabar.</span></span>
+        </h1>
       </div>
     </section>
 
@@ -115,7 +120,7 @@
     <!-- ========== 6. COLABORA ========== -->
     <section class="colabora" id="colabora" aria-labelledby="colabora-titulo">
       <img class="colabora__fondo" src="/img/cta-noche.jpg" alt="" width="1800" height="1350" loading="lazy">
-      <div class="colabora__contenido reveal">
+      <div class="colabora__contenido reveal reveal--escalonado">
         <p class="eyebrow">Colabora con nosotros</p>
         <!-- TEXTO PROVISIONAL -->
         <h2 class="colabora__titulo madena" id="colabora-titulo">¿Hacemos algo juntos?</h2>

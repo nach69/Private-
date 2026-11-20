@@ -1192,3 +1192,91 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
   .intro .cifra__mas { display: none; }
   .intro .cifra__num::before { content: "+"; }
 }
+
+/* =========================================================
+   MOVIMIENTO (prueba 20/11). Solo posición, tamaño y opacidad.
+   Con «reducir movimiento» todo queda quieto (regla global de arriba + JS).
+   ========================================================= */
+
+/* [MOV-1] Portada: titular partido alrededor del logo, con entrada escalonada */
+.portada__titulo {
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; max-width: none; margin: 0;
+  transform: none; line-height: 1.02;
+  font-family: var(--font-script); font-weight: 400;
+}
+.portada__linea {
+  display: block; width: 100%;
+  translate: 0 calc(var(--p, 0) * -48px);
+  opacity: calc(1 - var(--p, 0) * 0.9);
+  animation: mov-entrada .9s var(--ease) backwards;
+}
+.portada__linea--abajo { translate: 0 calc(var(--p, 0) * 48px); animation-delay: .18s; }
+.portada__texto {
+  display: block;
+  width: calc(100% / var(--madena-x)); max-width: calc(24ch / var(--madena-x));
+  margin: 0 auto;
+  transform: scaleX(var(--madena-x)); transform-origin: center;
+  text-wrap: balance;
+}
+.portada__titulo .portada__logo {
+  margin: clamp(10px, 2.2vh, 20px) auto;
+  scale: calc(1 - var(--p, 0) * 0.12);
+  opacity: calc(1 - var(--p, 0) * 0.7);
+  animation: mov-logo 1s var(--ease) .08s backwards;
+}
+.portada__media { translate: 0 calc(var(--p, 0) * 18%); }
+.portada__sombra {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: #000; opacity: calc(var(--p, 0) * 0.55);
+}
+@keyframes mov-entrada { from { opacity: 0; transform: translateY(26px); } }
+@keyframes mov-logo { from { opacity: 0; transform: scale(.94); } }
+
+/* [MOV-2] Carrusel: foco en el flyer del centro, imagen con profundidad y pulsación táctil */
+.carrusel--foco .evento {
+  transform: scale(calc(1 - var(--d, 0) * 0.08));
+  opacity: calc(1 - var(--d, 0) * 0.35);
+  transform-origin: center 40%;
+}
+.carrusel--foco .evento__flyer img,
+.carrusel--foco .evento__flyer:hover img {
+  transform: translateX(calc(var(--dx, 0) * -14px)) scale(1.1);
+  transition: none;
+}
+.evento__flyer { transition: scale .15s var(--ease); }
+.evento__enlace:active .evento__flyer { scale: .97; }
+
+/* [MOV-3] Nieve: el título se rellena al bajar, los logos se juntan, fotos a distinto ritmo */
+.mov-nieve .snow__title {
+  color: transparent;
+  background: linear-gradient(90deg, var(--white) var(--relleno, 0%), transparent var(--relleno, 0%));
+  -webkit-background-clip: text; background-clip: text;
+}
+.mov-nieve .snow__lockup > img:first-child {
+  translate: calc((1 - var(--q, 1)) * -45vw) 0;
+  opacity: calc(0.3 + var(--q, 1) * 0.7);
+}
+.mov-nieve .snow__lockup .snow__partner-logo {
+  translate: calc((1 - var(--q, 1)) * 45vw) 0;
+  opacity: calc(0.3 + var(--q, 1) * 0.7);
+}
+.mov-nieve .snow__x { display: inline-block; opacity: var(--q, 1); scale: calc(0.4 + var(--q, 1) * 0.6); }
+.mov-nieve .snow__video { translate: 0 calc(var(--pv, 0) * -30px); }
+.mov-nieve .snow__foto-movil img { scale: calc(1.18 - var(--pf, 0) * 0.18); }
+
+/* [MOV-4] Aparición escalonada en Nosotros y Colabora */
+.intro__foto.reveal { transition-delay: .12s; }
+.cifras__grid .cifra:nth-child(2) { transition-delay: .12s; }
+.js .reveal--escalonado { opacity: 1; transform: none; }
+.js .reveal--escalonado > * {
+  opacity: 0; transform: translateY(18px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+}
+.js .reveal--escalonado.is-visible > * { opacity: 1; transform: none; }
+.reveal--escalonado > :nth-child(2) { transition-delay: .1s; }
+.reveal--escalonado > :nth-child(3) { transition-delay: .2s; }
+.reveal--escalonado > :nth-child(4) { transition-delay: .3s; }
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal--escalonado > * { opacity: 1; transform: none; }
+}
