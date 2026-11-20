@@ -2,7 +2,7 @@
   {
     "id": "veleta",
     "nombre": "Veleta",
-    "logo": null,
+    "logo": "/logos/marcas/veleta.png",
     "instagram": "https://www.instagram.com/veletavalencia/",
     "menores": false,
     "enFranja": true
@@ -26,7 +26,7 @@
   {
     "id": "basto",
     "nombre": "Basto",
-    "logo": null,
+    "logo": "/logos/marcas/basto.png",
     "instagram": null,
     "menores": false,
     "enFranja": true
