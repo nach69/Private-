@@ -1158,3 +1158,37 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
   .footer__marca { justify-content: space-between; width: 100%; }
   .footer__iconos { gap: 8px; margin-right: -10px; } /* el icono (24 px) queda alineado con el margen, el área táctil sigue en 44 px */
 }
+
+/* Fecha larga de los eventos: solo en el móvil */
+.evento__fecha-larga { display: none; }
+
+/* =========================================================
+   SOLO MÓVIL (< 768 px) · ajustes 2
+   ========================================================= */
+@media (max-width: 767px) {
+  /* 1. Portada más alta para que el vídeo se vea más grande */
+  .portada { min-height: 82vh; min-height: 82svh; }
+
+  /* 2. Eventos: solo la fecha larga, con el mismo estilo que el titular de la portada */
+  .evento__marca { display: none; }
+  .evento__fecha-corta { display: none; }
+  .evento__fecha-larga { display: block; }
+  .evento__fecha {
+    font-family: var(--font-script); font-weight: 400; letter-spacing: 0; text-transform: none;
+    font-size: clamp(1.35rem, 6vw, 1.9rem); line-height: 1.05;
+    width: calc(100% / var(--madena-x));
+    transform: scaleX(var(--madena-x)); transform-origin: left center;
+  }
+
+  /* 3. Nieve: título arriba a la izquierda y logos centrados debajo */
+  .snow__head { display: grid; justify-items: stretch; text-align: left; gap: 22px; }
+  .snow__title { transform-origin: left center; margin-left: 0; margin-right: 0; }
+  .snow__lockup { justify-content: center; margin: 4px 0 6px; }
+
+  /* 4. Nosotros */
+  .intro__etiqueta { border-bottom: 0; padding-bottom: 0; }
+  .intro .section-title::before { content: "\201C"; }
+  .intro .section-title::after { content: "\201D"; }
+  .intro .cifra__mas { display: none; }
+  .intro .cifra__num::before { content: "+"; }
+}

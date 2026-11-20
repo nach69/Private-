@@ -88,7 +88,7 @@ function tarjetaCarrusel(ev, i) {
   return `<li class="evento" data-fecha="${visibleHasta(ev)}">
     <a class="evento__enlace" ${enlace} data-fourvenues="${escapar(url)}" aria-label="Entradas: ${escapar(marca.nombre)}, ${escapar(fechaLarga(ev.fecha))}">
       <span class="evento__flyer">${flyer}</span>
-      <span class="evento__fecha"><time datetime="${ev.fecha}">${escapar(fechaCorta(ev.fecha))}</time></span>
+      <span class="evento__fecha"><time datetime="${ev.fecha}"><span class="evento__fecha-corta">${escapar(fechaCorta(ev.fecha))}</span><span class="evento__fecha-larga">${escapar(fechaLarga(ev.fecha).replace(/^./, (c) => c.toUpperCase()))}</span></time></span>
       <span class="evento__marca">${escapar(marca.nombre)}</span>
     </a>
   </li>`;
