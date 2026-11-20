@@ -42,5 +42,11 @@
         "alt": null
       }
     ]
+  },
+  "nosotros": {
+    "_nota": "Foto de la sección Nosotros (en publico/img/) y su tamaño en píxeles.",
+    "foto": "/img/nosotros.jpg",
+    "ancho": "594",
+    "alto": "318"
   }
 }

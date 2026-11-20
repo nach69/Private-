@@ -1,8 +1,18 @@
 <footer class="site-footer">
     <div class="container footer__inner">
-      <a class="footer__brand" href="/" aria-label="{{nombre}}, inicio">
-        <img src="/logos/logo-white.png" alt="{{nombre}}" width="800" height="248" loading="lazy">
-      </a>
+      <div class="footer__marca">
+        <a class="footer__brand" href="/" aria-label="{{nombre}}, inicio">
+          <img src="/logos/logo-white.png" alt="{{nombre}}" width="800" height="248" loading="lazy">
+        </a>
+        <div class="footer__iconos">
+          <a class="footer__icono" href="https://instagram.com/gruposobremesa" target="_blank" rel="noopener noreferrer" aria-label="Instagram de {{nombre}}">
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a class="footer__icono" href="mailto:{{email}}" aria-label="Escribir a {{email}}">
+            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>
+          </a>
+        </div>
+      </div>
       <nav class="footer__nav" aria-label="Pie de página">
         <a href="/eventos/">Eventos</a>
         <a href="/vosotros/">Vosotros</a>

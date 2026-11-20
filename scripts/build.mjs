@@ -64,7 +64,6 @@ function flyerEvento(ev, marca, perezosa) {
       <span class="flyer-provisional__marca">${escapar(marca.nombre)}</span>
       ${ev.censurado ? '<span class="censura" aria-hidden="true">██████</span><span class="censura censura--corta" aria-hidden="true">████</span>' : ''}
       <span class="flyer-provisional__fecha">${escapar(fechaCorta(ev.fecha))}</span>
-      <span class="flyer-provisional__nota">Flyer pendiente</span>
     </div>`;
 }
 
@@ -81,13 +80,17 @@ function botonEntradas(ev, clase = '') {
 function tarjetaCarrusel(ev, i) {
   const marca = marcaPorId[ev.marca];
   const flyer = flyerEvento(ev, marca, i > 1);
-  const destino = ev.entradas
-    ? `<a class="evento__flyer" href="${escapar(ev.entradas)}" target="_blank" rel="noopener" aria-label="Entradas: ${escapar(marca.nombre)}, ${escapar(fechaLarga(ev.fecha))}">${flyer}</a>`
-    : `<a class="evento__flyer" href="/eventos/">${flyer}</a>`;
+  // Toda la tarjeta lleva a las entradas (Fourvenues). Sin enlace todavía: href="#" y data-fourvenues vacío.
+  const url = ev.entradas || '';
+  const enlace = url
+    ? `href="${escapar(url)}" target="_blank" rel="noopener noreferrer"`
+    : 'href="#"';
   return `<li class="evento" data-fecha="${visibleHasta(ev)}">
-    ${destino}
-    <p class="evento__fecha"><time datetime="${ev.fecha}">${escapar(fechaCorta(ev.fecha))}</time></p>
-    <p class="evento__marca">${escapar(marca.nombre)}</p>
+    <a class="evento__enlace" ${enlace} data-fourvenues="${escapar(url)}" aria-label="Entradas: ${escapar(marca.nombre)}, ${escapar(fechaLarga(ev.fecha))}">
+      <span class="evento__flyer">${flyer}</span>
+      <span class="evento__fecha"><time datetime="${ev.fecha}">${escapar(fechaCorta(ev.fecha))}</time></span>
+      <span class="evento__marca">${escapar(marca.nombre)}</span>
+    </a>
   </li>`;
 }
 
@@ -239,7 +242,7 @@ const bloquesComunes = {
     : '<span class="hueco hueco--logo">PENDIENTE: logo de Transvia</span>',
   fotosNieveExtra: (nieve.fotosExtra || []).map((f, i) => f.src
     ? `          <li><img src="${escapar(f.src)}" alt="${escapar(f.alt || 'Viaje a la nieve con Veleta')}" width="900" height="675" loading="lazy"></li>`
-    : `          <li class="hueco">PENDIENTE: foto ${i + 1} de Nieve</li>`).join('\n'),
+    : '').filter(Boolean).join('\n'),
   fondoPortadaMovil: escapar(fondoNuevo || config.portada.imagenMovil),
   fondoPortadaGrande: escapar(fondoNuevo || config.portada.imagenGrande),
   avisoFondo: fondoNuevo ? '' : '<p class="portada__aviso"><mark class="pendiente">PENDIENTE: nueva imagen de fondo</mark></p>',

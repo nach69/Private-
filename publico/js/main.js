@@ -89,6 +89,48 @@
     });
   });
 
+  /* ---------- Carrusel ligado al scroll: al bajar por la página, los flyers avanzan despacio ----------
+     Se puede seguir deslizando con el dedo; mientras la persona lo mueve, el scroll no lo empuja.
+     Con «reducir movimiento» no se mueve solo. */
+  var carruselScroll = document.querySelector('[data-carrusel-scroll]');
+  if (carruselScroll && !reduceMotion) {
+    var bloque = carruselScroll.closest('section') || carruselScroll;
+    var actual = carruselScroll.scrollLeft;
+    var manualHasta = 0;
+    var animando = false;
+    carruselScroll.classList.add('carrusel--scroll');
+    ['pointerdown', 'touchstart', 'wheel'].forEach(function (ev) {
+      carruselScroll.addEventListener(ev, function () { manualHasta = Date.now() + 1500; }, { passive: true });
+    });
+    function objetivo() {
+      var r = bloque.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var p = (vh - r.top) / (vh + r.height);
+      p = Math.max(0, Math.min(1, p));
+      return p * Math.max(0, carruselScroll.scrollWidth - carruselScroll.clientWidth);
+    }
+    function paso() {
+      if (Date.now() < manualHasta) { actual = carruselScroll.scrollLeft; animando = false; return; }
+      var meta = objetivo();
+      actual += (meta - actual) * 0.08;
+      if (Math.abs(meta - actual) < 0.5) { actual = meta; animando = false; }
+      carruselScroll.scrollLeft = actual;
+      if (animando) requestAnimationFrame(paso);
+    }
+    function alHacerScroll() {
+      if (Date.now() < manualHasta) { actual = carruselScroll.scrollLeft; return; }
+      if (!animando) { animando = true; requestAnimationFrame(paso); }
+    }
+    window.addEventListener('scroll', alHacerScroll, { passive: true });
+    window.addEventListener('resize', alHacerScroll);
+    alHacerScroll();
+  }
+
+  /* Tarjetas aún sin enlace de entradas (href="#"): no saltan arriba de la página */
+  document.querySelectorAll('.evento__enlace[href="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); });
+  });
+
   /* ---------- Vídeos: solo se reproducen a la vista y nunca solos si se pide «reducir movimiento» ---------- */
   function controlarVideo(video, soloPantallaGrande) {
     if (!video) return;
