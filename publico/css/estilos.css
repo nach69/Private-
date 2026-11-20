@@ -1311,3 +1311,48 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
   .js .intro.intro--visible .intro__foto.reveal,
   .js .intro .reveal.is-visible { opacity: 1; }
 }
+
+/* =========================================================
+   NIEVE · propuesta A «La montaña»: una escena a pantalla completa
+   ========================================================= */
+.snow--escena {
+  position: relative; isolation: isolate;
+  display: flex;
+  min-height: 100vh; min-height: 100svh;
+  padding: 0;
+  background: var(--black);
+}
+/* Montaña de fondo, algo más alta que la sección para poder moverse (profundidad) */
+.escena__fondo {
+  position: absolute; left: 0; right: 0; top: -12%; bottom: -12%;
+  z-index: -2;
+  translate: 0 calc((var(--pe, 0.5) - 0.5) * -14%);
+  will-change: translate;
+}
+.escena__fondo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+/* Oscurece arriba (título) y abajo (texto) para que se lea bien sobre la foto */
+.snow--escena::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(0,0,0,.72) 0%, rgba(0,0,0,.15) 34%, rgba(0,0,0,.1) 52%, rgba(0,0,0,.82) 100%);
+}
+/* Nieve cayendo */
+.escena__copos { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+
+.escena__contenido {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 32px;
+  width: 100%;
+  min-height: 100vh; min-height: 100svh;
+  padding-top: calc(var(--header-h) + 28px);
+  padding-bottom: clamp(36px, 7vh, 64px);
+}
+.escena__cabecera { display: grid; gap: 18px; }
+.snow--escena .snow__lockup { justify-content: center; }
+.escena__pie { display: grid; gap: 14px; justify-items: start; max-width: 34rem; }
+.snow--escena .snow__lead { border-left: 0; padding-left: 0; max-width: 20ch; }
+.snow--escena .snow__text { color: #e6e6e6; margin: 0; }
+.snow--escena .snow__reel { margin-top: 6px; }
+@media (min-width: 768px) {
+  .escena__cabecera { grid-template-columns: 1fr auto; align-items: end; }
+  .snow--escena .snow__lockup { justify-content: flex-end; }
+}

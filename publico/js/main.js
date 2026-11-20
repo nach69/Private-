@@ -117,11 +117,11 @@
   var portadaMov = document.querySelector('.portada');
   if (portadaMov) document.documentElement.classList.add('mov-portada');
 
-  // [MOV-3] Nieve: el título se rellena, los logos se juntan, las fotos se mueven a distinto ritmo
+  // [MOV-3] Nieve («La montaña»): el título se rellena, los logos se juntan y la montaña de fondo
+  // se mueve más despacio que el texto (profundidad). La nieve que cae va aparte, más abajo.
   var nieveTitulo = !reduceMotion && document.querySelector('.snow__title');
   var nieveLockup = !reduceMotion && document.querySelector('.snow__lockup');
-  var nieveVideo = !reduceMotion && document.querySelector('.snow__video');
-  var nieveFoto = !reduceMotion && document.querySelector('.snow__foto-movil');
+  var nieveEscena = !reduceMotion && document.querySelector('.snow--escena');
   if (nieveTitulo) document.documentElement.classList.add('mov-nieve');
 
   var pendiente = false;
@@ -132,8 +132,7 @@
     var rp = portadaMov && portadaMov.getBoundingClientRect();
     var rt = nieveTitulo && nieveTitulo.getBoundingClientRect();
     var rl = nieveLockup && nieveLockup.getBoundingClientRect();
-    var rv = nieveVideo && nieveVideo.getBoundingClientRect();
-    var rf = nieveFoto && nieveFoto.getBoundingClientRect();
+    var re = nieveEscena && nieveEscena.getBoundingClientRect();
 
     if (rp && rp.bottom > 0) {
       // El titular termina de aparecer cuando se ha bajado un 15 % de la portada (aún se ve entero)
@@ -142,8 +141,8 @@
     }
     if (rt && rt.top < vh && rt.bottom > 0) nieveTitulo.style.setProperty('--relleno', (progreso(rt, 0.35) * 100).toFixed(1) + '%');
     if (rl && rl.top < vh && rl.bottom > 0) nieveLockup.style.setProperty('--q', progreso(rl, 0.3).toFixed(3));
-    if (rv && rv.top < vh && rv.bottom > 0) nieveVideo.style.setProperty('--pv', ((rv.top + rv.height / 2) / vh - 0.5).toFixed(3));
-    if (rf && rf.top < vh && rf.bottom > 0) nieveFoto.style.setProperty('--pf', limitar((vh - rf.top) / (vh + rf.height)).toFixed(3));
+    // --pe va de 0 (la escena asoma por abajo) a 1 (ha salido por arriba)
+    if (re && re.top < vh && re.bottom > 0) nieveEscena.style.setProperty('--pe', limitar((vh - re.top) / (vh + re.height)).toFixed(3));
   }
   window.addEventListener('scroll', pedirFrame, { passive: true });
   window.addEventListener('resize', function () { vh = window.innerHeight || document.documentElement.clientHeight; pedirFrame(); });
@@ -211,6 +210,61 @@
     // Sin moverse cuando no está a la vista (ahorra batería)
     if ('IntersectionObserver' in window) {
       new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; }).observe(cinta);
+    }
+  }
+
+  // [MOV-3] Nieve cayendo sobre la montaña: puntos dibujados con código (sin imágenes), solo mientras
+  // la sección está a la vista. Con «reducir movimiento» no nieva.
+  var lienzo = !reduceMotion && document.querySelector('.escena__copos');
+  if (lienzo && lienzo.getContext) {
+    var ctx = lienzo.getContext('2d');
+    var copos = [];
+    var anchoL = 0, altoL = 0, nevando = false, ultimoC = 0;
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    function medirLienzo() {
+      var r = lienzo.getBoundingClientRect();
+      anchoL = r.width; altoL = r.height;
+      lienzo.width = Math.round(anchoL * dpr); lienzo.height = Math.round(altoL * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var cuantos = Math.round(Math.min(110, anchoL * altoL / 6500));
+      copos = [];
+      for (var i = 0; i < cuantos; i++) {
+        copos.push({
+          x: Math.random() * anchoL, y: Math.random() * altoL,
+          r: 0.8 + Math.random() * 2.2,            // tamaño: los grandes parecen más cerca
+          v: 18 + Math.random() * 42,              // velocidad de caída (px/s)
+          fase: Math.random() * Math.PI * 2,
+          a: 0.35 + Math.random() * 0.55           // transparencia
+        });
+      }
+    }
+    function nevar(t) {
+      if (!nevando) return;
+      var dt = ultimoC ? Math.min(64, t - ultimoC) / 1000 : 0;
+      ultimoC = t;
+      ctx.clearRect(0, 0, anchoL, altoL);
+      ctx.fillStyle = '#fff';
+      for (var i = 0; i < copos.length; i++) {
+        var c = copos[i];
+        c.y += c.v * dt * (c.r / 2);
+        c.fase += dt * 0.9;
+        var x = c.x + Math.sin(c.fase) * 12 * (c.r / 3);   // vaivén suave a los lados
+        if (c.y - c.r > altoL) { c.y = -c.r; c.x = Math.random() * anchoL; }
+        ctx.globalAlpha = c.a;
+        ctx.beginPath(); ctx.arc(x, c.y, c.r, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(nevar);
+    }
+    medirLienzo();
+    // En el móvil la barra del navegador cambia el alto al bajar: solo se recalcula si cambia el ancho
+    window.addEventListener('resize', function () { if (Math.abs(lienzo.getBoundingClientRect().width - anchoL) > 1) medirLienzo(); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        var ver = entries[0].isIntersecting;
+        if (ver && !nevando) { nevando = true; ultimoC = 0; requestAnimationFrame(nevar); }
+        else if (!ver) nevando = false;
+      }).observe(lienzo);
     }
   }
 

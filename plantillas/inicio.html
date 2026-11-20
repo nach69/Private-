@@ -50,46 +50,28 @@
       </div>
     </section>
 
-    <!-- ========== 4. NIEVE · {{nombreCorto}} × TRANSVIA XPERIENCE ========== -->
-    <!-- Línea de proyecto en colaboración. Transvia Xperience NO es una marca del grupo. -->
-    <section class="section snow" id="nieve" aria-labelledby="nieve-titulo">
-      <div class="container">
-        <header class="snow__head reveal">
-          <div>
-            <p class="eyebrow">Línea Nieve · Colaboración</p>
-            <h2 class="snow__title madena" id="nieve-titulo">Nieve</h2>
-          </div>
+    <!-- ========== 4. NIEVE · {{nombreCorto}} × TRANSVIA XPERIENCE (propuesta A: «La montaña») ========== -->
+    <!-- Una sola escena a pantalla completa: montaña de fondo con profundidad, nieve cayendo y el texto encima.
+         Las demás fotos y el vídeo de Nieve se ven en el reel. Transvia Xperience NO es una marca del grupo. -->
+    <section class="snow snow--escena" id="nieve" aria-labelledby="nieve-titulo">
+      <div class="escena__fondo" aria-hidden="true">
+        <img src="/img/nieve-bengala.jpg" alt="" width="720" height="1279" loading="lazy">
+      </div>
+      <canvas class="escena__copos" aria-hidden="true"></canvas>
+      <div class="container escena__contenido">
+        <header class="escena__cabecera">
+          <h2 class="snow__title madena" id="nieve-titulo">Nieve</h2>
           <p class="snow__lockup">
             <img src="/logos/logo-white.png" alt="{{nombre}}" width="800" height="248" loading="lazy">
             <span class="snow__x" aria-hidden="true">×</span>
             <img class="snow__partner-logo" src="/logos/transvia-blanco.png" alt="Transvia Xperience" width="600" height="200" loading="lazy">
           </p>
         </header>
-
-        <figure class="snow__video reveal">
-          <video class="snow__player" src="/video/nieve.mp4" poster="/img/nieve-poster.jpg"
-                 muted loop playsinline preload="none" width="1280" height="720"
-                 aria-label="Vídeo de la colaboración con Transvia Xperience: un grupo prepara los esquís y camina por la playa al atardecer"></video>
-        </figure>
-
-        <ul class="snow__strip reveal" role="list" aria-label="Veleta en Pas de la Casa">
-          <li><img src="/img/nieve-apres-ski.jpg" alt="Esquís junto a un cartel de «Après ski Veleta» con montañas nevadas" width="900" height="675" loading="lazy"></li>
-          <li><img src="/img/nieve-noche.jpg" alt="Público de noche en una fiesta en la nieve" width="900" height="675" loading="lazy"></li>
-          <li><img src="/img/nieve-grupo.jpg" alt="Grupo de amigas abrigadas en Pas de la Casa" width="900" height="675" loading="lazy"></li>
-{{{fotosNieveExtra}}}
-        </ul>
-
-        <figure class="snow__foto-movil reveal">
-          <img src="/img/nieve-bengala.jpg" alt="Grupo celebrando en la nieve con una bengala de humo y una bandera de Transvia" width="720" height="1279" loading="lazy">
-        </figure>
-
-        <div class="snow__body reveal">
+        <div class="escena__pie reveal">
           <!-- TEXTO PROVISIONAL -->
           <p class="snow__lead">Viajes de esquí, après-ski y fiesta en la nieve.</p>
-          <div>
-            <p class="snow__text">Una línea de proyecto de {{nombre}} junto a Transvia Xperience: escapadas a la nieve para ir con tu gente.</p>
-            <a class="btn snow__reel" href="https://www.instagram.com/reel/Dd1pCXnOdPn/" target="_blank" rel="noopener noreferrer">Ver el reel</a>
-          </div>
+          <p class="snow__text">Una línea de proyecto de {{nombre}} junto a Transvia Xperience: escapadas a la nieve para ir con tu gente.</p>
+          <a class="btn snow__reel" href="https://www.instagram.com/reel/Dd1pCXnOdPn/" target="_blank" rel="noopener noreferrer">Ver el reel</a>
         </div>
       </div>
     </section>
