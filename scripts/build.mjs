@@ -231,9 +231,9 @@ const bloquesComunes = {
   mostrarSiNoHayEventos: futuros.length ? ' hidden' : '',
   franjaMarcas: franjaMarcas(),
   galeria: galeriaHTML(fotos),
-  // Vídeo de fondo de la portada: solo en el móvil (en ordenador se queda la foto).
+  // Vídeo de fondo de la portada (móvil y ordenador).
   portadaVideo: config.portada.videoMp4
-    ? `<video class="portada__video" autoplay muted loop playsinline preload="metadata" poster="${escapar(config.portada.videoPoster || config.portada.imagenMovil)}" data-solo-movil aria-hidden="true">
+    ? `<video class="portada__video" autoplay muted loop playsinline preload="metadata" poster="${escapar(config.portada.videoPoster || config.portada.imagenMovil)}" aria-hidden="true">
         ${config.portada.videoWebm ? `<source src="${escapar(config.portada.videoWebm)}" type="video/webm">` : ''}
         <source src="${escapar(config.portada.videoMp4)}" type="video/mp4">
       </video>`

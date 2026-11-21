@@ -1084,13 +1084,12 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 .snow .btn.snow__reel { background: var(--rojo-transvia); border-color: var(--rojo-transvia); color: var(--white); }
 @media (hover: hover) { .snow .btn.snow__reel:hover { background: transparent; color: var(--white); border-color: var(--rojo-transvia); } }
 
-/* Foto vertical de Nieve: solo en el móvil */
-.snow__foto-movil { display: none; }
+
 
 /* =========================================================
-   SOLO MÓVIL (< 768 px)
+   DISEÑO ACTUAL (nació en el móvil; desde el 21/11 también en ordenador)
    ========================================================= */
-@media (max-width: 767px) {
+@media all {
   /* 1. Portada: vídeo de fondo, sin franja de etiquetas */
   .portada__video { display: block; object-fit: cover; }
   .marquee { display: none; }
@@ -1159,13 +1158,12 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
   .footer__iconos { gap: 8px; margin-right: -10px; } /* el icono (24 px) queda alineado con el margen, el área táctil sigue en 44 px */
 }
 
-/* Fecha larga de los eventos: solo en el móvil */
-.evento__fecha-larga { display: none; }
+
 
 /* =========================================================
-   SOLO MÓVIL (< 768 px) · ajustes 2
+   DISEÑO ACTUAL · ajustes 2 (móvil y ordenador)
    ========================================================= */
-@media (max-width: 767px) {
+@media all {
   /* 1. Portada más alta para que el vídeo se vea más grande */
   .portada { min-height: 82vh; min-height: 82svh; }
 
@@ -1369,7 +1367,7 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
   font-family: var(--font-body); font-weight: 700; letter-spacing: -0.01em; text-transform: none;
   transform: none; width: auto;
 }
-@media (max-width: 767px) {
+@media all {
   .evento__fecha {
     font-family: var(--font-body); font-weight: 700; letter-spacing: -0.01em;
     font-size: 1.15rem; line-height: 1.2; transform: none; width: auto;
@@ -1397,6 +1395,17 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
   opacity: calc(0.3 + var(--q, 1) * 0.7);
 }
 @media (min-width: 768px) {
-  .snow--escena .snow__lockup--nieve { justify-content: flex-start; }
+  .snow--escena .snow__lockup--nieve { justify-content: center; }
   .escena__cabecera { grid-template-columns: 1fr; }
+}
+
+/* Ordenador (≥ 768 px): mismo diseño que el móvil, con medidas para pantalla grande */
+@media (min-width: 768px) {
+  .portada { min-height: 88vh; min-height: 88svh; }
+  .portada__titulo { font-size: clamp(2.2rem, 4.2vw, 4rem); }
+  .portada__titulo .portada__logo { width: min(46vw, 560px); }
+  .carrusel { grid-auto-columns: calc((min(100vw, var(--max)) - 2 * var(--gutter) - 3 * 18px) / 4); }
+  .intro .cifras__grid { grid-template-columns: 1fr 1fr; }
+  .footer__marca { gap: 20px; justify-content: flex-start; width: auto; }
+  .footer__iconos { margin-right: 0; }
 }

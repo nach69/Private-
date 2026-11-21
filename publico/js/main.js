@@ -274,7 +274,7 @@
     // El vídeo de la portada es solo para el móvil; en ordenador se queda la foto.
     if (soloMovil && window.matchMedia('(min-width: 768px)').matches) { video.remove(); return; }
     // La portada se reproduce siempre (decisión de Nacho, 20/11), también con «reducir movimiento».
-    if (reduceMotion && !soloMovil) { video.removeAttribute('autoplay'); video.pause(); return; }
+    if (reduceMotion && !video.classList.contains('portada__video')) { video.removeAttribute('autoplay'); video.pause(); return; }
     if (!('IntersectionObserver' in window)) { video.play().catch(function () {}); return; }
     new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -283,7 +283,7 @@
       });
     }, { threshold: 0.2 }).observe(video);
   }
-  controlarVideo(document.querySelector('.portada__video'), true);
+  controlarVideo(document.querySelector('.portada__video'), false); // desde el 21/11 también en ordenador
   controlarVideo(document.querySelector('.snow__player'), false);
 
   /* ---------- Cifras: cuentan desde 0 hasta el valor al entrar en pantalla ----------
