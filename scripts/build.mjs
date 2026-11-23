@@ -167,19 +167,13 @@ function fotosGaleria() {
   return fotos;
 }
 
-// Para que la última fila de la galería nunca quede a medias: con 2, 3 o 4 columnas,
-// las primeras fotos que hagan falta ocupan dos huecos (clases ancha-2, ancha-3, ancha-4).
-function clasesAnchas(i, total) {
-  return [2, 3, 4].filter((cols) => i < (cols - (total % cols)) % cols).map((cols) => `ancha-${cols}`);
-}
-
 function galeriaHTML(fotos) {
   if (!fotos.length) return '<p class="galeria__vacia">Pronto subiremos las primeras fotos.</p>';
-  return '<ul class="galeria" role="list">' + fotos.map((f, i) => {
-    const clases = clasesAnchas(i, fotos.length);
+  // Todas las fotos con el mismo tamaño y recorte (cuadradas, object-fit: cover) y carga diferida
+  return '<ul class="galeria" role="list">' + fotos.map((f) => {
     const img = `<img src="${f.src}" alt="${escapar(f.alt)}" loading="lazy">`;
     const pie = `<span class="galeria__marca">${escapar(f.marca.nombre)}</span>`;
-    const li = clases.length ? `<li class="${clases.join(' ')}">` : '<li>';
+    const li = '<li>';
     return f.marca.instagram
       ? `${li}<a href="${escapar(f.marca.instagram)}" target="_blank" rel="noopener" aria-label="${escapar(f.alt)}. Ver ${escapar(f.marca.nombre)} en Instagram">${img}${pie}</a></li>`
       : `${li}<div>${img}${pie}</div></li>`;

@@ -92,12 +92,12 @@ test('eventos que acaban o empiezan de madrugada siguen visibles al día siguien
   assert.equal(visibleHasta({ fecha: '2026-12-22', hora: null }), '2026-12-22');
 });
 
-test('galería: la última fila queda completa con 2, 3 y 4 columnas', () => {
+test('galería: todas las fotos iguales y con carga diferida', () => {
   const html = readFileSync(new URL('../dist/vosotros/index.html', import.meta.url), 'utf8');
-  const items = [...html.matchAll(/<li( class="([^"]*)")?><a[^>]*instagram/g)].map((m) => m[2] || '');
+  const items = [...html.matchAll(/<li( class="([^"]*)")?><a[^>]*instagram[^>]*>(<img[^>]*>)/g)];
   assert.ok(items.length > 0);
-  for (const cols of [2, 3, 4]) {
-    const huecos = items.reduce((n, c) => n + (c.includes(`ancha-${cols}`) ? 2 : 1), 0);
-    assert.equal(huecos % cols, 0, `con ${cols} columnas sobran huecos`);
+  for (const m of items) {
+    assert.equal(m[1], undefined, 'ninguna foto ocupa dos huecos');
+    assert.match(m[3], /loading="lazy"/);
   }
 });
