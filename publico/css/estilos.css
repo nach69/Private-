@@ -1438,23 +1438,16 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 .invitacion__botones .btn { flex: 1; }
 .invitacion .form-info { margin-top: 0; font-size: .72rem; }
 
-/* Portada (24/11): sin frase, solo el logo, que aparece (fundido y subida) al empezar a bajar.
-   --t lo calcula main.js: de 0 a 1 en el primer 6 % de la portada. Con «reducir movimiento», solo fundido. */
+/* Portada (24/11): sin frase, solo el logo, fijo: se ve desde el principio y no se mueve ni se apaga al bajar
+   (decisión de Nacho). */
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
-.portada__titulo .portada__logo--solo {
-  width: min(72vw, 520px); margin: 0 auto;
-  animation: none;
-  opacity: calc(1 - var(--p, 0) * 0.7);
-}
+.portada__titulo .portada__logo--solo,
 .mov-portada .portada__titulo .portada__logo--solo {
-  opacity: calc(var(--t, 0) * (1 - var(--p, 0) * 0.7));
-  translate: 0 calc((1 - var(--t, 0)) * 24px);
-}
-@media (prefers-reduced-motion: reduce) {
-  .mov-portada .portada__titulo .portada__logo--solo { translate: none; }
+  width: min(72vw, 520px); margin: 0 auto;
+  animation: none; opacity: 1; scale: none; translate: none;
 }
 @media (min-width: 768px) {
   .portada__titulo .portada__logo--solo { width: min(46vw, 640px); }

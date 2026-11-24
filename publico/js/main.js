@@ -135,8 +135,7 @@
     var re = nieveEscena && nieveEscena.getBoundingClientRect();
 
     if (rp && rp.bottom > 0) {
-      // El logo de portada termina de aparecer cuando se ha bajado un 6 % de la portada
-      // (antes el titular lo hacía al 15 %: así sale antes, con muy poco gesto)
+      // --t: antes hacía aparecer el titular / logo al bajar; desde el 24/11 el logo es fijo y ya no se usa
       portadaMov.style.setProperty('--t', limitar(-rp.top / (rp.height * 0.06)).toFixed(3));
       if (!reduceMotion) portadaMov.style.setProperty('--p', limitar(-rp.top / rp.height).toFixed(3));
     }
