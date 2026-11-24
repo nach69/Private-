@@ -28,7 +28,7 @@
   --font-body: "Helvetica Neue", Helvetica, sans-serif;
   /* Fuente de acento: RL Madena, algo estirada en horizontal como el «Sobremesa» del logo */
   --font-script: "RL Madena", "Helvetica Neue", Helvetica, sans-serif;
-  --acento-estirado: scaleX(1.08);
+  --acento-estirado: scaleY(1.25); /* como la etiqueta «Nosotros» */
 
   --gutter: 20px;
   --max: 1240px;
@@ -1390,3 +1390,34 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
   .footer__marca { gap: 20px; justify-content: flex-start; width: auto; }
   .footer__iconos { margin-right: 0; }
 }
+
+/* =========================================================
+   Ajustes 24/11: todo RL Madena con el estilo de «Nosotros»
+   (estirada en vertical 1.25, espaciado -0.03em, peso normal), en lugar del estirado horizontal
+   ========================================================= */
+.madena,
+.section-title,
+.snow__title,
+.instagram__titulo,
+.evento-ficha__titulo,
+.sin-eventos__titulo,
+.legal h2,
+.flyer-provisional__marca,
+.flyer-provisional__fecha,
+.partner__name,
+.mobile-menu a {
+  letter-spacing: -0.03em;
+  transform: scaleY(1.25);
+}
+.madena,
+.section-title,
+.snow__title,
+.instagram__titulo,
+.evento-ficha__titulo,
+.sin-eventos__titulo,
+.legal h2,
+.flyer-provisional__marca,
+.partner__name { width: auto; transform-origin: left center; }
+.madena--centro,
+.instagram__titulo { transform-origin: center; }
+.mobile-menu a { display: inline-block; transform-origin: left center; }
