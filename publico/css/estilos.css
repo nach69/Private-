@@ -1421,3 +1421,8 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 .madena--centro,
 .instagram__titulo { transform-origin: center; }
 .mobile-menu a { display: inline-block; transform-origin: left center; }
+
+/* Contacto: información básica de protección de datos bajo cada formulario (primera capa) */
+.form-info { margin-top: 14px; font-size: .8rem; line-height: 1.5; color: var(--grey-3); }
+.form-info a { color: inherit; text-decoration: underline; }
+.newsletter .form-info { color: inherit; opacity: .75; }

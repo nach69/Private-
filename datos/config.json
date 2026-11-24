@@ -29,7 +29,7 @@
     "nif": null,
     "direccion": null
   },
-  "fechaTextosLegales": "19 de noviembre de 2026",
+  "fechaTextosLegales": "24 de noviembre de 2026",
   "nieve": {
     "_nota": "Sección Nieve. logoTransvia: ruta del logo (p. ej. /logos/transvia.png). fotosExtra: fotos añadidas a la tira (súbelas a publico/img/); mientras \"src\" sea null sale un hueco marcado como PENDIENTE.",
     "logoTransvia": null,
