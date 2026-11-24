@@ -46,8 +46,8 @@
   },
   "nosotros": {
     "_nota": "Foto de la sección Nosotros (en publico/img/) y su tamaño en píxeles.",
-    "foto": "/img/nosotros-casino-veleta.jpg",
-    "ancho": "634",
-    "alto": "424"
+    "foto": "/img/nosotros.jpg",
+    "ancho": "537",
+    "alto": "327"
   }
 }
