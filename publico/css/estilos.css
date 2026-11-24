@@ -1072,7 +1072,7 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 
   /* 5. Nosotros */
   .intro__etiqueta {
-    /* tipografía (RL Madena, scaleY 1.25, -0.03em): regla compartida con el titular de portada, más abajo */
+    /* tipografía (RL Madena, scaleY 1.25, -0.03em): en «Ajustes 23/11», más abajo */
     width: 100%;
     transform-origin: left bottom;
     margin-top: .25em;
@@ -1362,28 +1362,17 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background: rgba(0, 0, 0, .35);
 }
-/* Portada: el titular usa la misma tipografía que la etiqueta «Nosotros»
-   (RL Madena, estirada en vertical, mismo espaciado y peso), más grande y con sombra para contraste */
-.intro__etiqueta,
-.portada__texto {
+/* Etiqueta «Nosotros»: RL Madena estirada en vertical (el titular de portada vuelve a su letra anterior desde el 24/11) */
+.intro__etiqueta {
   font-family: var(--font-script); font-weight: 400; font-style: normal;
   letter-spacing: -0.03em; text-transform: none;
   transform: scaleY(1.25);
 }
-.portada__titulo { font-size: clamp(2.3rem, 10.5vw, 4.4rem); line-height: 1.05; }
-.portada__texto {
-  width: 100%; max-width: 13ch;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, .55), 0 1px 3px rgba(0, 0, 0, .6);
-}
-.portada__linea--arriba .portada__texto { transform-origin: center bottom; }
-.portada__linea--abajo .portada__texto { transform-origin: center top; }
-.portada__titulo .portada__logo { margin: clamp(22px, 4vh, 36px) auto; }
 
 /* Ordenador (≥ 768 px): mismo diseño que el móvil, con medidas para pantalla grande */
 @media (min-width: 768px) {
   .portada { min-height: 88vh; min-height: 88svh; }
-  .portada__titulo { font-size: clamp(3.2rem, 5.6vw, 5.6rem); }
-  .portada__texto { max-width: 16ch; }
+  .portada__titulo { font-size: clamp(2.2rem, 4.2vw, 4rem); }
   .portada__titulo .portada__logo { width: min(46vw, 560px); }
   .carrusel { grid-auto-columns: calc((min(100vw, var(--max)) - 2 * var(--gutter) - 3 * 18px) / 4); }
   .intro .cifras__grid { grid-template-columns: 1fr 1fr; }
