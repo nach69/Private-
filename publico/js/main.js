@@ -135,8 +135,9 @@
     var re = nieveEscena && nieveEscena.getBoundingClientRect();
 
     if (rp && rp.bottom > 0) {
-      // El titular termina de aparecer cuando se ha bajado un 15 % de la portada (aún se ve entero)
-      portadaMov.style.setProperty('--t', limitar(-rp.top / (rp.height * 0.15)).toFixed(3));
+      // El logo de portada termina de aparecer cuando se ha bajado un 6 % de la portada
+      // (antes el titular lo hacía al 15 %: así sale antes, con muy poco gesto)
+      portadaMov.style.setProperty('--t', limitar(-rp.top / (rp.height * 0.06)).toFixed(3));
       if (!reduceMotion) portadaMov.style.setProperty('--p', limitar(-rp.top / rp.height).toFixed(3));
     }
     if (rt && rt.top < vh && rt.bottom > 0) nieveTitulo.style.setProperty('--relleno', (progreso(rt, 0.35) * 100).toFixed(1) + '%');

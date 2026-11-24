@@ -1438,32 +1438,26 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 .invitacion__botones .btn { flex: 1; }
 .invitacion .form-info { margin-top: 0; font-size: .72rem; }
 
-/* Portada (24/11, en prueba): el logo forma parte de la frase. «La» a la izquierda y «empieza» a la derecha,
-   a la altura de la palabra Sobremesa del logo; debajo sigue «cuando el plan debería acabar.»
-   Con el movimiento: al cargar solo se ve el logo; al bajar, las dos palabras entran desde los lados. */
-.portada__fila {
-  --logo-w: min(44vw, 460px);
-  display: flex; align-items: flex-end; justify-content: center; gap: .28em;
-  width: 100%; margin: clamp(10px, 2.2vh, 20px) 0;
+/* Portada (24/11): sin frase, solo el logo, que aparece (fundido y subida) al empezar a bajar.
+   --t lo calcula main.js: de 0 a 1 en el primer 6 % de la portada. Con «reducir movimiento», solo fundido. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
-.portada__titulo .portada__fila .portada__logo { width: var(--logo-w); margin: 0; flex: 0 0 auto; }
-.portada__palabra {
-  display: block; flex: 0 0 auto; white-space: nowrap; line-height: 1;
-  font-family: var(--font-script); font-weight: 400;
-  transform: scaleX(var(--madena-x));
-  /* la línea de las letras coincide con la base de «Sobremesa» en el logo */
-  padding-bottom: calc(var(--logo-w) * 0.31 * 0.27);
+.portada__titulo .portada__logo--solo {
+  width: min(72vw, 520px); margin: 0 auto;
+  animation: none;
+  opacity: calc(1 - var(--p, 0) * 0.7);
 }
-.portada__palabra--izq { transform-origin: right center; margin-right: .1em; }
-.portada__palabra--der { transform-origin: left center; margin-left: .1em; }
-.mov-portada .portada__palabra { opacity: var(--t, 0); will-change: opacity, translate; }
-.mov-portada .portada__palabra--izq { translate: calc((1 - var(--t, 0)) * -28px) 0; }
-.mov-portada .portada__palabra--der { translate: calc((1 - var(--t, 0)) * 28px) 0; }
+.mov-portada .portada__titulo .portada__logo--solo {
+  opacity: calc(var(--t, 0) * (1 - var(--p, 0) * 0.7));
+  translate: 0 calc((1 - var(--t, 0)) * 24px);
+}
 @media (prefers-reduced-motion: reduce) {
-  .mov-portada .portada__palabra--izq, .mov-portada .portada__palabra--der { translate: none; }
+  .mov-portada .portada__titulo .portada__logo--solo { translate: none; }
 }
 @media (min-width: 768px) {
-  .portada__fila { --logo-w: min(40vw, 520px); }
+  .portada__titulo .portada__logo--solo { width: min(46vw, 640px); }
 }
 .invitacion { gap: 8px; padding: 18px 16px 14px; }
 .invitacion__texto { font-size: .88rem; }
