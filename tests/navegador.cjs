@@ -96,11 +96,12 @@ const ok = (cond, texto) => { console.log((cond ? 'OK   ' : 'FALLA') + ' ' + tex
   await p3.click('[data-cookies="denegar"]');
   await p3.clock.runFor(7000);
   ok(await p3.isVisible('#invitacion-newsletter'), 'la invitación sale unos segundos después de contestar a las cookies');
-  await p3.click('#invitacion-newsletter [data-invitacion-cerrar].btn');
-  ok(await p3.isHidden('#invitacion-newsletter'), '«Ahora no» cierra la invitación');
+  ok(await p3.$$eval('#invitacion-newsletter input[type=checkbox]', (c) => c.length) === 0, 'la invitación no pide marcar casillas');
+  await p3.click('#invitacion-newsletter [data-invitacion-cerrar]');
+  ok(await p3.isHidden('#invitacion-newsletter'), 'la × cierra la invitación');
   await p3.reload();
   await p3.clock.runFor(8000);
-  ok(await p3.isHidden('#invitacion-newsletter'), 'tras «Ahora no» no vuelve a salir');
+  ok(await p3.isHidden('#invitacion-newsletter'), 'tras cerrarla no vuelve a salir');
   await ctx3.close();
 
   await navegador.close();

@@ -1416,27 +1416,6 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 .form-info a { color: inherit; text-decoration: underline; }
 .newsletter .form-info { color: inherit; opacity: .75; }
 
-/* Invitación a la newsletter: tarjeta abajo, como el aviso de cookies; se cierra con «Ahora no» o la × */
-.invitacion {
-  position: fixed; z-index: 140; left: 12px; right: 12px; bottom: 12px;
-  display: grid; gap: 10px; max-width: 460px; margin-left: auto;
-  padding: 22px 18px 18px; background: var(--white); color: var(--ink);
-  border: 2px solid var(--black); box-shadow: 0 10px 40px rgba(0,0,0,.25);
-  animation: invitacion-entra .45s var(--ease) both;
-}
-@keyframes invitacion-entra { from { opacity: 0; transform: translateY(16px); } }
-@media (prefers-reduced-motion: reduce) { .invitacion { animation: none; } }
-.invitacion__cerrar {
-  position: absolute; top: 4px; right: 6px; width: 40px; height: 40px;
-  background: none; border: 0; font-size: 1.6rem; line-height: 1; cursor: pointer; color: inherit;
-}
-.invitacion__titulo { font-weight: 700; font-size: 1.15rem; line-height: 1.2; padding-right: 32px; }
-.invitacion__texto { font-size: .92rem; line-height: 1.45; color: #333; }
-.invitacion__form { display: grid; gap: 10px; }
-.invitacion__form .field--check label { font-size: .82rem; line-height: 1.4; }
-.invitacion__botones { display: flex; gap: 10px; }
-.invitacion__botones .btn { flex: 1; }
-.invitacion .form-info { margin-top: 0; font-size: .72rem; }
 
 /* Portada (24/11): sin frase, solo el logo, fijo: se ve desde el principio y no se mueve ni se apaga al bajar
    (decisión de Nacho). */
@@ -1452,12 +1431,39 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 @media (min-width: 768px) {
   .portada__titulo .portada__logo--solo { width: min(46vw, 640px); }
 }
-.invitacion { gap: 8px; padding: 18px 16px 14px; }
-.invitacion__texto { font-size: .88rem; }
-.invitacion .field { gap: 2px; }
-.invitacion .field label { font-size: .7rem; }
-.invitacion .field input[type="email"] { padding: 6px 0; min-height: 0; height: 40px; font-size: 1rem; }
-.invitacion .field--check label { font-size: .78rem; }
-.invitacion .btn { min-height: 44px; }
-.invitacion .form-info { font-size: .68rem; line-height: 1.4; }
-.invitacion .form-status:empty { display: none; }
+
+/* Invitación «Forma parte de la Sobremesa»: tarjeta pequeña abajo, sin casilla (escribir el email y pulsar es el sí) */
+.invitacion {
+  position: fixed; z-index: 140; left: 12px; right: 12px; bottom: 12px;
+  display: grid; gap: 6px; max-width: 420px; margin-left: auto;
+  padding: 16px 16px 12px; background: var(--black); color: var(--white);
+  box-shadow: 0 10px 40px rgba(0,0,0,.35);
+  animation: invitacion-entra .45s var(--ease) both;
+}
+@keyframes invitacion-entra { from { opacity: 0; transform: translateY(16px); } }
+@media (prefers-reduced-motion: reduce) { .invitacion { animation: none; } }
+.invitacion__cerrar {
+  position: absolute; top: 2px; right: 4px; width: 40px; height: 40px;
+  background: none; border: 0; font-size: 1.5rem; line-height: 1; cursor: pointer; color: inherit; opacity: .7;
+  z-index: 2;
+}
+.invitacion__titulo {
+  font-family: var(--font-script); font-weight: 400; font-size: 1.7rem; line-height: 1.05;
+  letter-spacing: -0.03em; transform: scaleY(1.25); transform-origin: left center;
+  padding-right: 36px; margin: 4px 0 2px;
+}
+.invitacion__texto { font-size: .88rem; line-height: 1.4; color: #d6d6d6; }
+.invitacion__form { display: grid; gap: 4px; margin-top: 6px; }
+.invitacion__fila { display: flex; gap: 8px; align-items: stretch; }
+.invitacion__fila .field { flex: 1; gap: 0; }
+.invitacion .field input[type="email"] {
+  height: 42px; padding: 0 10px; border: 1px solid #555; background: transparent; color: var(--white);
+}
+.invitacion .field input::placeholder { color: #9a9a9a; }
+.invitacion .field input:focus-visible { box-shadow: none; border-color: var(--white); }
+.invitacion__fila .btn { flex: 0 0 auto; min-height: 42px; background: var(--white); color: var(--black); border-color: var(--white); }
+.invitacion .field__error { min-height: 0; font-size: .78rem; color: #ffb4b4; }
+.invitacion .field__error:empty, .invitacion .form-status:empty { display: none; }
+.invitacion .form-status { font-size: .85rem; }
+.invitacion__legal { font-size: .68rem; line-height: 1.4; color: #9a9a9a; }
+.invitacion__legal a { color: inherit; text-decoration: underline; }
