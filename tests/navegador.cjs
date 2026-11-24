@@ -86,6 +86,23 @@ const ok = (cond, texto) => { console.log((cond ? 'OK   ' : 'FALLA') + ' ' + tex
   ok(await p2.isVisible('[data-sin-eventos]') && await p2.isHidden('.eventos-lista'), 'sin eventos, la página de Eventos no enseña un calendario vacío');
   await ctx2.close();
 
+  // Invitación a la newsletter: nunca a la vez que el aviso de cookies, opcional y se recuerda
+  const ctx3 = await navegador.newContext({ ...devices['iPhone 13'] });
+  const p3 = await ctx3.newPage();
+  await p3.clock.install();
+  await p3.goto(BASE + '/');
+  await p3.clock.runFor(8000);
+  ok(await p3.isHidden('#invitacion-newsletter'), 'la invitación no sale mientras está el aviso de cookies');
+  await p3.click('[data-cookies="denegar"]');
+  await p3.clock.runFor(7000);
+  ok(await p3.isVisible('#invitacion-newsletter'), 'la invitación sale unos segundos después de contestar a las cookies');
+  await p3.click('#invitacion-newsletter [data-invitacion-cerrar].btn');
+  ok(await p3.isHidden('#invitacion-newsletter'), '«Ahora no» cierra la invitación');
+  await p3.reload();
+  await p3.clock.runFor(8000);
+  ok(await p3.isHidden('#invitacion-newsletter'), 'tras «Ahora no» no vuelve a salir');
+  await ctx3.close();
+
   await navegador.close();
   servidor.close();
   console.log(fallos ? `\n${fallos} comprobación(es) fallida(s)` : '\nTodo correcto');

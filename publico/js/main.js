@@ -341,11 +341,52 @@
     almacen.guardar(CLAVE, JSON.stringify({ valor: valor, fecha: Date.now() }));
     aviso.hidden = true;
     if (valor === 'aceptar') cargarTerceros();
+    programarInvitacion();
   }
+  /* ---------- Invitación a la newsletter (opcional) ----------
+     Sale unos segundos después de contestar al aviso de cookies, nunca a la vez.
+     «Ahora no» o la × la esconden 30 días; si alguien se apunta, no vuelve a salir.
+     No sale en Contacto, que ya tiene su propio formulario. */
+  var invitacion = document.getElementById('invitacion-newsletter');
+  var CLAVE_INV = 'sm_newsletter';
+  var TREINTA_DIAS = 30 * 24 * 3600 * 1000;
+  var temporizadorInv = null;
+  function invitacionPendiente() {
+    if (!invitacion || /^\/contacto\//.test(window.location.pathname)) return false;
+    try {
+      var g = JSON.parse(almacen.leer(CLAVE_INV) || 'null');
+      if (g && (g.valor === 'apuntado' || Date.now() - g.fecha < TREINTA_DIAS)) return false;
+    } catch (e) { /* dato corrupto: se vuelve a ofrecer */ }
+    return true;
+  }
+  function cerrarInvitacion(valor) {
+    almacen.guardar(CLAVE_INV, JSON.stringify({ valor: valor, fecha: Date.now() }));
+    invitacion.hidden = true;
+  }
+  function programarInvitacion() {
+    if (!invitacionPendiente() || temporizadorInv) return;
+    temporizadorInv = setTimeout(function () {
+      if (aviso && !aviso.hidden) { temporizadorInv = null; return; }
+      invitacion.hidden = false;
+    }, 6000);
+  }
+  if (invitacion) {
+    invitacion.addEventListener('click', function (e) {
+      if (e.target.closest('[data-invitacion-cerrar]')) cerrarInvitacion('ahora-no');
+    });
+    invitacion.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') cerrarInvitacion('ahora-no');
+    });
+    invitacion.querySelector('form').addEventListener('enviado', function () {
+      almacen.guardar(CLAVE_INV, JSON.stringify({ valor: 'apuntado', fecha: Date.now() }));
+      setTimeout(function () { invitacion.hidden = true; }, 2500);
+    });
+  }
+
   if (aviso) {
     var actual = eleccion();
     if (!actual) aviso.hidden = false;
-    else if (actual === 'aceptar') cargarTerceros();
+    else { if (actual === 'aceptar') cargarTerceros(); programarInvitacion(); }
     aviso.addEventListener('click', function (e) {
       var b = e.target.closest('[data-cookies]');
       if (b) decidir(b.getAttribute('data-cookies'));
@@ -448,6 +489,7 @@
         form.reset();
         form.elements.t.value = String(Date.now());
         estado('success', MENSAJES_OK[tipo]);
+        form.dispatchEvent(new CustomEvent('enviado'));
       }).catch(function (err) {
         var texto = err && err.message && !/^HTTP/.test(err.message) ? err.message
           : 'No se ha podido enviar. Inténtalo de nuevo en unos minutos o escríbenos directamente al email.';

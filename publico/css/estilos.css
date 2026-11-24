@@ -1415,3 +1415,62 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
 .form-info { margin-top: 14px; font-size: .8rem; line-height: 1.5; color: var(--grey-3); }
 .form-info a { color: inherit; text-decoration: underline; }
 .newsletter .form-info { color: inherit; opacity: .75; }
+
+/* Invitación a la newsletter: tarjeta abajo, como el aviso de cookies; se cierra con «Ahora no» o la × */
+.invitacion {
+  position: fixed; z-index: 140; left: 12px; right: 12px; bottom: 12px;
+  display: grid; gap: 10px; max-width: 460px; margin-left: auto;
+  padding: 22px 18px 18px; background: var(--white); color: var(--ink);
+  border: 2px solid var(--black); box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  animation: invitacion-entra .45s var(--ease) both;
+}
+@keyframes invitacion-entra { from { opacity: 0; transform: translateY(16px); } }
+@media (prefers-reduced-motion: reduce) { .invitacion { animation: none; } }
+.invitacion__cerrar {
+  position: absolute; top: 4px; right: 6px; width: 40px; height: 40px;
+  background: none; border: 0; font-size: 1.6rem; line-height: 1; cursor: pointer; color: inherit;
+}
+.invitacion__titulo { font-weight: 700; font-size: 1.15rem; line-height: 1.2; padding-right: 32px; }
+.invitacion__texto { font-size: .92rem; line-height: 1.45; color: #333; }
+.invitacion__form { display: grid; gap: 10px; }
+.invitacion__form .field--check label { font-size: .82rem; line-height: 1.4; }
+.invitacion__botones { display: flex; gap: 10px; }
+.invitacion__botones .btn { flex: 1; }
+.invitacion .form-info { margin-top: 0; font-size: .72rem; }
+
+/* Portada (24/11, en prueba): el logo forma parte de la frase. «La» a la izquierda y «empieza» a la derecha,
+   a la altura de la palabra Sobremesa del logo; debajo sigue «cuando el plan debería acabar.»
+   Con el movimiento: al cargar solo se ve el logo; al bajar, las dos palabras entran desde los lados. */
+.portada__fila {
+  --logo-w: min(44vw, 460px);
+  display: flex; align-items: flex-end; justify-content: center; gap: .28em;
+  width: 100%; margin: clamp(10px, 2.2vh, 20px) 0;
+}
+.portada__titulo .portada__fila .portada__logo { width: var(--logo-w); margin: 0; flex: 0 0 auto; }
+.portada__palabra {
+  display: block; flex: 0 0 auto; white-space: nowrap; line-height: 1;
+  font-family: var(--font-script); font-weight: 400;
+  transform: scaleX(var(--madena-x));
+  /* la línea de las letras coincide con la base de «Sobremesa» en el logo */
+  padding-bottom: calc(var(--logo-w) * 0.31 * 0.27);
+}
+.portada__palabra--izq { transform-origin: right center; margin-right: .1em; }
+.portada__palabra--der { transform-origin: left center; margin-left: .1em; }
+.mov-portada .portada__palabra { opacity: var(--t, 0); will-change: opacity, translate; }
+.mov-portada .portada__palabra--izq { translate: calc((1 - var(--t, 0)) * -28px) 0; }
+.mov-portada .portada__palabra--der { translate: calc((1 - var(--t, 0)) * 28px) 0; }
+@media (prefers-reduced-motion: reduce) {
+  .mov-portada .portada__palabra--izq, .mov-portada .portada__palabra--der { translate: none; }
+}
+@media (min-width: 768px) {
+  .portada__fila { --logo-w: min(40vw, 520px); }
+}
+.invitacion { gap: 8px; padding: 18px 16px 14px; }
+.invitacion__texto { font-size: .88rem; }
+.invitacion .field { gap: 2px; }
+.invitacion .field label { font-size: .7rem; }
+.invitacion .field input[type="email"] { padding: 6px 0; min-height: 0; height: 40px; font-size: 1rem; }
+.invitacion .field--check label { font-size: .78rem; }
+.invitacion .btn { min-height: 44px; }
+.invitacion .form-info { font-size: .68rem; line-height: 1.4; }
+.invitacion .form-status:empty { display: none; }
