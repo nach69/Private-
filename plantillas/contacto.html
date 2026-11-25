@@ -61,38 +61,4 @@
       </div>
     </section>
 
-    <!-- ========== NEWSLETTER ========== -->
-    <section class="section newsletter" id="newsletter" aria-labelledby="newsletter-titulo">
-      <div class="container container--narrow">
-        <p class="eyebrow">Newsletter</p>
-        <h2 class="section-title" id="newsletter-titulo">Entérate antes que nadie</h2>
-        <!-- TEXTO PROVISIONAL -->
-        <p class="newsletter__texto">Te escribimos cuando haya fechas nuevas. Nada más.</p>
-
-        <form class="contact-form newsletter__form" id="form-newsletter" action="/api/contacto" method="post" novalidate data-formulario>
-          <input type="hidden" name="tipo" value="newsletter">
-          <input type="hidden" name="t" value="">
-
-          <div class="field">
-            <label for="nl-email">Email</label>
-            <input id="nl-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="150">
-            <p class="field__error" id="nl-email-error"></p>
-          </div>
-
-          <div class="hp" aria-hidden="true">
-            <label for="nl-web">No rellenar</label>
-            <input id="nl-web" name="web" type="text" tabindex="-1" autocomplete="off">
-          </div>
-
-          <div class="field field--check">
-            <input id="nl-consentimiento" name="consentimiento" type="checkbox" value="si" required>
-            <label for="nl-consentimiento">Quiero recibir por email las novedades y eventos de {{nombre}}. He leído la <a href="/privacidad/" target="_blank">política de privacidad</a>. Puedo darme de baja cuando quiera.</label>
-            <p class="field__error" id="nl-consentimiento-error"></p>
-          </div>
-
-          <button class="btn" type="submit">Apuntarme</button>
-          <p class="form-status" role="status" aria-live="polite"></p>
-          <p class="form-info"><strong>Información básica sobre tus datos.</strong> Responsable: {{nombre}}. Para qué: enviarte novedades y eventos por email, con tu consentimiento. No se ceden a nadie salvo obligación legal. Puedes darte de baja cuando quieras y ejercer tus demás derechos escribiendo a <a href="mailto:{{email}}">{{email}}</a>. Más información en la <a href="/privacidad/">política de privacidad</a>.</p>
-        </form>
-      </div>
-    </section>
+    {{> unete}}

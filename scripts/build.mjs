@@ -261,7 +261,7 @@ for (const p of PAGINAS) {
   const tituloCompleto = p.titulo ? `${p.titulo} · ${config.nombre}` : `${config.nombre} · Valencia`;
   const bloques = {
     ...bloquesComunes,
-    contenido: rellenar(leer(`plantillas/${p.plantilla}`), config, bloquesComunes),
+    contenido: rellenar(leer(`plantillas/${p.plantilla}`), config, { ...bloquesComunes, rutaPagina: p.ruta }),
     tituloPagina: escapar(tituloCompleto),
     descripcionPagina: escapar(p.descripcion),
     urlPagina: escapar(config.dominio + (p.ruta === '/404' ? '/' : p.ruta)),

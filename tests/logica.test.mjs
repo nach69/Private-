@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { hoyEnMadrid, eventosFuturos, visibleHasta, erroresEvento, fechaCorta, fechaLarga, ordenarCarpetas } from '../scripts/lib.mjs';
-import { revisarEnvio, componerCorreo, TEXTO_CONSENTIMIENTO_NEWSLETTER, TEXTO_ALTA_INVITACION } from '../lib/formulario.mjs';
+import { revisarEnvio, componerCorreo, TEXTO_ALTA_NEWSLETTER } from '../lib/formulario.mjs';
 
 test('hoy en Madrid cambia a medianoche de Valencia, no de UTC', () => {
   assert.equal(hoyEnMadrid(new Date('2026-11-27T22:59:00Z')), '2026-11-27');
@@ -64,35 +64,26 @@ test('errores de formulario', () => {
   assert.ok(revisarEnvio({ ...base, mensaje: 'corto' }, AHORA).error);
 });
 
-test('newsletter: la casilla es obligatoria y el correo guarda fecha, hora, IP y texto', () => {
-  const nl = { tipo: 'newsletter', t: String(AHORA - 9000), email: 'a@b.es' };
-  assert.ok(revisarEnvio(nl, AHORA).error);
-  const r = revisarEnvio({ ...nl, consentimiento: 'si' }, AHORA);
+test('newsletter: sin casilla; el correo de aviso guarda fecha, hora, IP, página y texto', () => {
+  const nl = { tipo: 'newsletter', origen: '/eventos/', t: String(AHORA - 9000), email: 'A@B.es' };
+  const r = revisarEnvio(nl, AHORA);
+  assert.ok(!r.error);
+  assert.equal(r.datos.email, 'a@b.es');
   const c = componerCorreo(r, { ip: '1.2.3.4', fecha: new Date(AHORA) });
   assert.match(c.texto, /19\/11\/2026, 13:00:00 \(hora de Madrid\)/);
   assert.match(c.texto, /1\.2\.3\.4/);
-  assert.ok(c.texto.includes(TEXTO_CONSENTIMIENTO_NEWSLETTER));
+  assert.match(c.texto, /Página: \/eventos\//);
+  assert.ok(c.texto.includes(TEXTO_ALTA_NEWSLETTER));
+  assert.equal(revisarEnvio({ ...nl, origen: 'https://otra-web.com' }, AHORA).datos.origen, '/');
 });
 
-test('newsletter desde la tarjeta: sin casilla, y el correo guarda cómo se apuntó', () => {
-  const nl = { tipo: 'newsletter', origen: 'invitacion', t: String(AHORA - 9000), email: 'a@b.es' };
-  const r = revisarEnvio(nl, AHORA);
-  assert.ok(!r.error);
-  const c = componerCorreo(r, { ip: '1.2.3.4', fecha: new Date(AHORA) });
-  assert.ok(c.texto.includes(TEXTO_ALTA_INVITACION));
-  assert.match(c.texto, /1\.2\.3\.4/);
-});
-
-test('el texto de la tarjeta guardado coincide con el de la web', () => {
-  const html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');
-  const txt = html.match(/<span data-texto-alta>([\s\S]*?)<\/span>/)[1].replace(/\s+/g, ' ').trim();
-  assert.equal(txt, TEXTO_ALTA_INVITACION);
-});
-
-test('el texto de consentimiento guardado coincide con el de la web', () => {
-  const html = readFileSync(new URL('../dist/contacto/index.html', import.meta.url), 'utf8');
-  const label = html.match(/<label for="nl-consentimiento">([\s\S]*?)<\/label>/)[1].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-  assert.equal(label, TEXTO_CONSENTIMIENTO_NEWSLETTER);
+test('el texto guardado como prueba coincide con el de «Únete a la sobremesa» en todas las páginas', () => {
+  for (const pag of ['index.html', 'eventos/index.html', 'vosotros/index.html', 'contacto/index.html']) {
+    const html = readFileSync(new URL('../dist/' + pag, import.meta.url), 'utf8');
+    const txt = html.match(/<span data-texto-alta>([\s\S]*?)<\/span>/)[1].replace(/\s+/g, ' ').trim();
+    assert.equal(txt, TEXTO_ALTA_NEWSLETTER, pag);
+    assert.ok(!/type="checkbox"[^>]*name="consentimiento"/.test(html), pag + ': sin casilla de newsletter');
+  }
 });
 
 test('el asunto no admite saltos de línea (inyección de cabeceras)', () => {

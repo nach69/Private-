@@ -1,4 +1,5 @@
-# Cabeceras de Cloudflare Pages: seguridad y caché.
+# Cabeceras de la web (Cloudflare Workers, archivos estáticos): seguridad y caché.
+# La tipografía no cambia nunca: se guarda un año. Todo lo demás se comprueba en cada visita.
 /*
   Content-Security-Policy: default-src 'self'; img-src 'self' data:; media-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'
   X-Content-Type-Options: nosniff
@@ -12,9 +13,15 @@ https://private.super-unit-ca4a.workers.dev/*
 
 /fuentes/*
   Cache-Control: public, max-age=31536000, immutable
+# Fotos, logos, flyers y vídeos: el navegador pregunta siempre si hay versión nueva (respuesta 304 si no ha cambiado,
+# casi sin coste). Así, al cambiar una foto aunque se llame igual, se ve al momento en la web publicada.
 /img/*
-  Cache-Control: public, max-age=604800
+  Cache-Control: public, max-age=0, must-revalidate
 /galeria/*
-  Cache-Control: public, max-age=604800
+  Cache-Control: public, max-age=0, must-revalidate
 /flyers/*
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=0, must-revalidate
+/logos/*
+  Cache-Control: public, max-age=0, must-revalidate
+/video/*
+  Cache-Control: public, max-age=0, must-revalidate

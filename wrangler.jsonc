@@ -12,5 +12,10 @@
     "not_found_handling": "404-page",
     "run_worker_first": ["/api/*"]
   },
+  // Lista de la newsletter. Cloudflare crea la base de datos sola en la primera publicación (en la UE);
+  // la tabla la crea el propio Worker en la primera alta (src/newsletter.js).
+  "d1_databases": [
+    { "binding": "DB", "database_name": "sobremesa-newsletter", "jurisdiction": "eu" }
+  ],
   "observability": { "enabled": true }
 }

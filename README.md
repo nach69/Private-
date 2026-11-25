@@ -67,9 +67,13 @@ El nombre «Grupo Sobremesa» se cambia **solo** en `datos/config.json` (`nombre
 
 - Generador propio sin dependencias: `scripts/build.mjs` junta `plantillas/` + `datos/` + `galeria/` + `flyers/` + `publico/` en `dist/`.
 - Worker de Cloudflare: `src/worker.js` sirve `dist/` y atiende `/api/contacto` (`src/contacto.js`, lógica en `lib/formulario.mjs`). Configuración en `wrangler.jsonc`.
-- Formulario de contacto y newsletter: Envía a info@ con la API de **Resend**. Antispam: campo trampa, tiempo mínimo de rellenado, comprobación de origen y límite de enlaces.
+- Formulario de contacto: envía a info@ con la API de **Resend**.
+- Newsletter («Únete a la sobremesa», `plantillas/parciales/unete.html`, en Inicio, Eventos, Vosotros y Contacto): cada alta se **guarda en Cloudflare D1** (base de datos `sobremesa-newsletter`, en la UE; `src/newsletter.js`). Cloudflare crea la base de datos sola en la primera publicación y el Worker crea la tabla en la primera alta. Si Resend está configurado, además llega un aviso a info@. Sin casilla: escribir el email y pulsar «Me apunto» es el consentimiento; se guarda fecha, IP, página y el texto que había a la vista.
+- Descargar la lista: `https://gruposobremesa.com/api/newsletter.csv?clave=…` (CSV con «;», se abre con Excel). La clave es el secreto `NEWSLETTER_CLAVE`; sin él, la descarga está apagada. También se ve en Cloudflare → Storage & Databases → D1 → `sobremesa-newsletter` → Console.
+- Antispam de los formularios: campo trampa, tiempo mínimo de rellenado, comprobación de origen y límite de enlaces.
 - Sin cookies ni nada de terceros. El aviso de cookies guarda la elección en el navegador (`sm_cookies`); si algún día se incrusta algo de fuera, se marca con `data-consent-src` y solo se carga tras «Aceptar».
-- Cabeceras de seguridad y caché en `publico/_headers`. La dirección de prueba `workers.dev` lleva `noindex`.
+- Cabeceras de seguridad y caché en `publico/_headers`. Fotos, logos, flyers y vídeos se revisan en cada visita (`must-revalidate`): si se cambia un archivo aunque se llame igual, se ve al momento tras publicar. La dirección de prueba `workers.dev` lleva `noindex`.
+- Publicar = subir a `main`. Cloudflare construye y cambia a la versión nueva de golpe, sin cortes; si la construcción falla, sigue la versión anterior.
 
 ### Probar en local
 
@@ -88,6 +92,7 @@ npx wrangler dev         # igual, pero imitando Cloudflare (incluye el formulari
   - `RESEND_API_KEY` (como **secreto**)
   - `EMAIL_FROM`, por ejemplo `Web Grupo Sobremesa <web@gruposobremesa.com>`
   - `EMAIL_TO` (opcional; por defecto `info@gruposobremesa.com`)
+  - `NEWSLETTER_CLAVE` (como **secreto**): clave para descargar la lista de la newsletter
 
 ### Regla del DNS
 

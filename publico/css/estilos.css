@@ -1432,38 +1432,29 @@ a.marca-cuadro:hover { border-color: var(--black); transform: translateY(-2px); 
   .portada__titulo .portada__logo--solo { width: min(46vw, 640px); }
 }
 
-/* Invitación «Forma parte de la Sobremesa»: tarjeta pequeña abajo, sin casilla (escribir el email y pulsar es el sí) */
-.invitacion {
-  position: fixed; z-index: 140; left: 12px; right: 12px; bottom: 12px;
-  display: grid; gap: 6px; max-width: 420px; margin-left: auto;
-  padding: 16px 16px 12px; background: var(--black); color: var(--white);
-  box-shadow: 0 10px 40px rgba(0,0,0,.35);
-  animation: invitacion-entra .45s var(--ease) both;
+/* =========================================================
+   «Únete a la sobremesa»: la newsletter como un bloque más de la página (25/11), no una ventana emergente.
+   Fondo negro como el resto de bloques oscuros; título en RL Madena con el estilo de «Nosotros».
+   ========================================================= */
+.unete { background: var(--black); color: var(--white); padding: clamp(64px, 12vw, 120px) 0; }
+.unete__inner { display: grid; justify-items: center; text-align: center; gap: 14px; max-width: 920px; }
+.unete__titulo { font-size: clamp(2.6rem, 11vw, 5rem); line-height: 1; transform-origin: center; margin: 0 auto .15em; }
+.unete__texto { color: #cfcfcf; max-width: 34ch; text-wrap: balance; }
+.unete__form { display: grid; gap: 8px; width: 100%; max-width: 480px; margin-top: 10px; }
+.unete__fila { display: flex; gap: 8px; }
+.unete__fila .field { flex: 1; gap: 0; }
+.unete .field input[type="email"] {
+  height: 52px; padding: 0 2px; background: transparent; color: var(--white);
+  border: 0; border-bottom: 2px solid var(--white); border-radius: 0;
 }
-@keyframes invitacion-entra { from { opacity: 0; transform: translateY(16px); } }
-@media (prefers-reduced-motion: reduce) { .invitacion { animation: none; } }
-.invitacion__cerrar {
-  position: absolute; top: 2px; right: 4px; width: 40px; height: 40px;
-  background: none; border: 0; font-size: 1.5rem; line-height: 1; cursor: pointer; color: inherit; opacity: .7;
-  z-index: 2;
+.unete .field input::placeholder { color: #8c8c8c; }
+.unete .field input:focus-visible { box-shadow: 0 2px 0 0 var(--white); }
+.unete__fila .btn { flex: 0 0 auto; min-height: 52px; }
+.unete .field__error { min-height: 0; color: #ffb4b4; font-size: .85rem; text-align: left; }
+.unete .field__error:empty, .unete .form-status:empty { display: none; }
+.unete .form-status { color: var(--white); }
+.unete__legal { font-size: .72rem; line-height: 1.45; color: #8c8c8c; text-wrap: pretty; margin-top: 6px; }
+.unete__legal a { color: inherit; text-decoration: underline; }
+@media (max-width: 380px) {
+  .unete__fila { flex-direction: column; }
 }
-.invitacion__titulo {
-  font-family: var(--font-script); font-weight: 400; font-size: 1.7rem; line-height: 1.05;
-  letter-spacing: -0.03em; transform: scaleY(1.25); transform-origin: left center;
-  padding-right: 36px; margin: 4px 0 2px;
-}
-.invitacion__texto { font-size: .88rem; line-height: 1.4; color: #d6d6d6; }
-.invitacion__form { display: grid; gap: 4px; margin-top: 6px; }
-.invitacion__fila { display: flex; gap: 8px; align-items: stretch; }
-.invitacion__fila .field { flex: 1; gap: 0; }
-.invitacion .field input[type="email"] {
-  height: 42px; padding: 0 10px; border: 1px solid #555; background: transparent; color: var(--white);
-}
-.invitacion .field input::placeholder { color: #9a9a9a; }
-.invitacion .field input:focus-visible { box-shadow: none; border-color: var(--white); }
-.invitacion__fila .btn { flex: 0 0 auto; min-height: 42px; background: var(--white); color: var(--black); border-color: var(--white); }
-.invitacion .field__error { min-height: 0; font-size: .78rem; color: #ffb4b4; }
-.invitacion .field__error:empty, .invitacion .form-status:empty { display: none; }
-.invitacion .form-status { font-size: .85rem; }
-.invitacion__legal { font-size: .68rem; line-height: 1.4; color: #9a9a9a; }
-.invitacion__legal a { color: inherit; text-decoration: underline; }

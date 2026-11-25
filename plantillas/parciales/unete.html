@@ -1,0 +1,28 @@
+<!-- ========== ÚNETE A LA SOBREMESA (newsletter) ========== -->
+    <!-- Bloque integrado en la página, no ventana emergente. Escribir el email y pulsar «Me apunto» es el sí;
+         el texto de debajo del botón se guarda como prueba y debe coincidir con TEXTO_ALTA_NEWSLETTER (lib/formulario.mjs). -->
+    <section class="unete" id="unete" aria-labelledby="unete-titulo">
+      <div class="container unete__inner reveal">
+        <h2 class="unete__titulo madena" id="unete-titulo">Únete a la sobremesa</h2>
+        <p class="unete__texto">Fechas nuevas, planes y alguna sorpresa. Te escribimos solo cuando haya algo que contar.</p>
+        <form class="unete__form" action="/api/contacto" method="post" novalidate data-formulario>
+          <input type="hidden" name="tipo" value="newsletter">
+          <input type="hidden" name="origen" value="{{{rutaPagina}}}">
+          <input type="hidden" name="t" value="">
+          <div class="unete__fila">
+            <div class="field">
+              <label class="sr-only" for="unete-email">Tu email</label>
+              <input id="unete-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="Tu email" required maxlength="150">
+            </div>
+            <button class="btn btn--light" type="submit">Me apunto</button>
+          </div>
+          <p class="field__error" id="unete-email-error"></p>
+          <div class="hp" aria-hidden="true">
+            <label for="unete-web">No rellenar</label>
+            <input id="unete-web" name="web" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <p class="form-status" role="status" aria-live="polite"></p>
+          <p class="unete__legal"><span data-texto-alta>Al apuntarte recibirás por email los planes y novedades de {{nombre}}. Puedes darte de baja cuando quieras.</span> Responsable: {{nombre}}. Más información en la <a href="/privacidad/">política de privacidad</a>.</p>
+        </form>
+      </div>
+    </section>

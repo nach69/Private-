@@ -62,7 +62,6 @@ const ok = (cond, texto) => { console.log((cond ? 'OK   ' : 'FALLA') + ' ' + tex
   // 4. Desplegable «Soy» preseleccionado y validación del formulario
   await p.goto(BASE + '/contacto/?soy=patrocinador');
   ok(await p.inputValue('#cf-soy') === 'patrocinador', 'Colabora → Contacto llega con «Patrocinador» elegido');
-  ok(!(await p.isChecked('#nl-consentimiento')), 'casilla de newsletter sin marcar');
   await p.click('#form-contacto [type=submit]');
   ok((await p.textContent('#cf-nombre-error')).length > 0, 'avisa si falta el nombre');
   await ctx.close();
@@ -86,22 +85,16 @@ const ok = (cond, texto) => { console.log((cond ? 'OK   ' : 'FALLA') + ' ' + tex
   ok(await p2.isVisible('[data-sin-eventos]') && await p2.isHidden('.eventos-lista'), 'sin eventos, la página de Eventos no enseña un calendario vacío');
   await ctx2.close();
 
-  // Invitación a la newsletter: nunca a la vez que el aviso de cookies, opcional y se recuerda
+  // «Únete a la sobremesa»: bloque dentro de la página (no ventana emergente) y sin casillas que marcar
   const ctx3 = await navegador.newContext({ ...devices['iPhone 13'] });
   const p3 = await ctx3.newPage();
-  await p3.clock.install();
   await p3.goto(BASE + '/');
-  await p3.clock.runFor(8000);
-  ok(await p3.isHidden('#invitacion-newsletter'), 'la invitación no sale mientras está el aviso de cookies');
   await p3.click('[data-cookies="denegar"]');
-  await p3.clock.runFor(7000);
-  ok(await p3.isVisible('#invitacion-newsletter'), 'la invitación sale unos segundos después de contestar a las cookies');
-  ok(await p3.$$eval('#invitacion-newsletter input[type=checkbox]', (c) => c.length) === 0, 'la invitación no pide marcar casillas');
-  await p3.click('#invitacion-newsletter [data-invitacion-cerrar]');
-  ok(await p3.isHidden('#invitacion-newsletter'), 'la × cierra la invitación');
-  await p3.reload();
-  await p3.clock.runFor(8000);
-  ok(await p3.isHidden('#invitacion-newsletter'), 'tras cerrarla no vuelve a salir');
+  ok(await p3.$$eval('[role=dialog]', (d) => d.length) === 0, 'no hay ventanas emergentes de newsletter');
+  ok((await p3.textContent('#unete-titulo')).trim() === 'Únete a la sobremesa', 'bloque «Únete a la sobremesa» en la portada');
+  ok(await p3.$$eval('#unete input[type=checkbox]', (c) => c.length) === 0, 'apuntarse no pide marcar casillas');
+  await p3.click('#unete [type=submit]');
+  ok((await p3.textContent('#unete-email-error')).includes('email'), 'avisa si falta el email');
   await ctx3.close();
 
   await navegador.close();
